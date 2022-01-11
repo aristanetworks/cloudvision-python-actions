@@ -5,4 +5,4 @@
 .PHONY: clean
 
 lint:
-	flake8 && mypy .
+	flake8
