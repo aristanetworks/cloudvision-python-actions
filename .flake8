@@ -1,0 +1,3 @@
+[flake8]
+max-line-length = 120
+ignore = H301,F403,F401,F821

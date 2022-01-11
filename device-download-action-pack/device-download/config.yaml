@@ -1,0 +1,23 @@
+type: ACTION
+language: PYTHON_3
+name: Device Download
+description: Downloads files from devices to specified endpoint
+file: script.py
+static_args: []
+dynamic_args:
+  - name: DeviceID
+    description: The ID of the device to run this script against
+    required: true
+    hidden: false
+  - name: command
+    description: What command to run
+    required: true
+    hidden: false
+  - name: destination
+    description: Where the files will be downloaded to. Defaults to saving on disk
+    required: false
+    hidden: false
+  - name: protocol
+    description: What protocol to use for file transfer. Accepts either "http" or "ftp" 
+    required: true
+    hidden: false

@@ -1,0 +1,6 @@
+type: PACKAGE
+version: 1.0.0
+name: device-download Action package
+description: Action package containing a script that downloads files from  a device
+actions:
+  - device-download:
