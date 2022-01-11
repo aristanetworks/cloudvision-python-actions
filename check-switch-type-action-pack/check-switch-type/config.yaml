@@ -1,0 +1,15 @@
+type: ACTION
+language: PYTHON_3
+name: Check Switch Type
+description: Checks that a switch is of the provided type
+file: script.py
+static-params: []
+dynamic-params:
+  - name: DeviceID
+    description: The ID of the device to run this script against
+    required: true
+    hidden: false
+  - name: switchType
+    description: The expected type of the switch. Allows for partial matching for cases where models are appended with -SSD, etc.
+    required: true
+    hidden: false
