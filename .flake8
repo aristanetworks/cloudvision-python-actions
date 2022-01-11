@@ -1,3 +1,8 @@
 [flake8]
 max-line-length = 120
-ignore = H301,F403,F401,F821
+
+ignore = 
+    # unable to detect undefined names, may be encountered when using rAPIs in scripts
+    F403,
+    # undefined name <name>, will be caused by the existence of ctx in the scripts
+    F821
