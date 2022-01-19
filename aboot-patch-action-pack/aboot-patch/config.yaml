@@ -1,0 +1,25 @@
+type: ACTION
+language: PYTHON_3
+name: Aboot Patch
+description: Downloads and installs the specified Aboot patch for Field Notice 044. The image can be downloaded from any server using https. If using CVP as source for the patch file, it requires that CVP has an image bundle containing that Aboot patch file in it
+file: script.py
+static-params: []
+dynamic-params:
+  - name: DeviceID
+    description: The ID of the device to run this script against
+    required: true
+    hidden: false
+  - name: extensionURL
+    description: Url of where the extension is being stored
+    required: true
+    hidden: false
+    default: /<CVP_IP>/cvpservice/image/getImagebyId/
+  - name: extension
+    description: Patch file name
+    required: true
+    hidden: false
+  - name: vrf
+    description: Vrf to install the patch onto
+    required: true
+    hidden: false
+    default: default
