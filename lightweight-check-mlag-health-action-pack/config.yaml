@@ -1,0 +1,4 @@
+type: PACKAGE
+version: 1.0.0
+name: lightweight-check-mlag-health Action package
+description: Action package containing a custom script that monitors a device's mlag ports health to ensure they come up
