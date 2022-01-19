@@ -1,0 +1,34 @@
+type: ACTION
+language: PYTHON_3
+name: Device to Web Page Connectivity check
+description: Checks if a web page is reachable from a number of client devices
+file: script.py
+static-params: []
+dynamic-params:
+  - name: deviceList
+    description: Comma separated list of the devices ips to connect to to run the check
+    required: true
+    hidden: false
+  - name: pageUrl
+    description: URL of the web page to access from the specified clients
+    required: true
+    hidden: false
+    default: "300"
+  - name: failLimit
+    description: The number of page reachability tests that can fail before the script fails
+    required: true
+    hidden: false
+    default: "2"
+  - name: timeout
+    description: Maximum time in seconds to wait for a response from the web page
+    required: true
+    hidden: false
+    default: "1"
+  - name: username
+    description: Username to access the client devices
+    required: true
+    hidden: true
+  - name: password
+    description: Password to use to the client access devices
+    required: true
+    hidden: true
