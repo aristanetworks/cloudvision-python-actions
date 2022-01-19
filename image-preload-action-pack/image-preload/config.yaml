@@ -1,0 +1,32 @@
+# Note: This script will become obsolete once the image studio system
+# becomes available, after which this only serves as an example of script writing
+type: ACTION
+language: PYTHON_3
+name: Image Preload
+description: Downloads a specified EOS SWI onto a vrf
+file: script.py
+static-params: []
+dynamic-params:
+  - name: DeviceID
+    description: The ID of the device to preload the image onto
+    required: true
+    hidden: false
+  - name: authority
+    description: Host where the image is stored
+    required: true
+    hidden: false
+    default: <CVP_IP>
+  - name: path
+    description: Path to where the image is stored on the host
+    required: true
+    hidden: false
+    default: /cvpservice/image/getImagebyId/
+  - name: eos
+    description: eos swi name
+    required: true
+    hidden: false
+  - name: vrf
+    description: Vrf to load the image onto
+    required: true
+    hidden: false
+    default: default
