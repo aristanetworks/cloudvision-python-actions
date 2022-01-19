@@ -1,0 +1,20 @@
+type: ACTION
+language: PYTHON_3
+name: Push Token
+description: Downloads and puts the specified token into a file on the device
+file: script.py
+static-params: []
+dynamic-params:
+  - name: DeviceID
+    description: The ID of the device to run this script against
+    required: true
+    hidden: false
+  - name: token
+    description: Token to push
+    required: true
+    hidden: false
+  - name: filename
+    description: Filename of where the token will be stored
+    required: true
+    hidden: false
+    default: "/tmp/cv-onboarding-token"
