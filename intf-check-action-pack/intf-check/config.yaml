@@ -1,0 +1,15 @@
+type: ACTION
+language: PYTHON_3
+name: Check Interface Status
+description: Checks the statuses of the provided interfaces and fails if any are down
+file: script.py
+static-params: []
+dynamic-params:
+  - name: DeviceID
+    description: The ID of the device to run this script against
+    required: true
+    hidden: false
+  - name: interfaces
+    description: Comma separated list of the interfaces to check
+    required: true
+    hidden: false
