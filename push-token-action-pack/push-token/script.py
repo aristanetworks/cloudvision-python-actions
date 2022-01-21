@@ -3,6 +3,7 @@
 # that can be found in the COPYING file.
 
 from typing import List, Dict
+from cloudvision.cvlib import ActionFailed
 
 token = ctx.changeControl.args.get("token")
 filename = ctx.changeControl.args.get("filename")
@@ -17,4 +18,4 @@ cmdResponses: List[Dict] = ctx.runDeviceCmds(cmds)
 # Only consider the first error that is encountered as following commands require previous ones to succeed
 errs = [resp.get('error') for resp in cmdResponses if resp.get('error')]
 if errs:
-    raise UserWarning(f"Copying of token to {filename} failed with: {errs[0]}")
+    raise ActionFailed(f"Copying of token to {filename} failed with: {errs[0]}")

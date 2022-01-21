@@ -2,6 +2,8 @@
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the COPYING file.
 
+from cloudvision.cvlib import ActionFailed
+
 import time
 
 # The MLAG check built into CVP is sometimes a little too clever for its own good.
@@ -25,12 +27,12 @@ def isMlagUp():
     if all(key in cmdResponse for key in ["errorCode", "errorMessage"]):
         errCode = cmdResponse["errorCode"]
         errMsg = cmdResponse["errorMessage"]
-        raise UserWarning(f"Commands could not be run on device, returned {errCode}:\"{errMsg}\"")
+        raise ActionFailed(f"Commands could not be run on device, returned {errCode}:\"{errMsg}\"")
     # Check to see if an error occurred with running the command,
     # if so, return false with the status to allow for a retry later
     cmdErr = cmdResponse[0].get('error')
     if cmdErr:
-        raise UserWarning(f"\"show mlag\" command failed with: \"{cmdErr}\"")
+        raise ActionFailed(f"\"show mlag\" command failed with: \"{cmdErr}\"")
 
     response = cmdResponse[0]["response"]
     status = ""
@@ -76,7 +78,7 @@ else:
     mlagUp, status = isMlagUp()
     if not mlagUp:
         # Raise an uncaught exception indicating that the script action has failed
-        raise UserWarning((f"MLAG ports are still disabled after {duration} seconds.\n"
+        raise ActionFailed((f"MLAG ports are still disabled after {duration} seconds.\n"
                            f"Final mlag check reported current status of mlag as \"{status}\""))
 
 ctx.alog("MLAG ports are now active.")

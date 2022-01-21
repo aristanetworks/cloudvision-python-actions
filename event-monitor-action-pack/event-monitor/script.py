@@ -2,7 +2,7 @@
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the COPYING file.
 
-import signal
+from cloudvision.cvlib import ActionFailed, TimeoutExpiry
 
 # Import the event resource API models to be able to easily parse the rAPI output
 from arista.event.v1 import models
@@ -30,18 +30,6 @@ IGNORED_NOTIFS = {
     # An update type that happens when we go transition to the subscription phase
     Operation.INITIAL_SYNC_COMPLETE
 }
-
-
-class EventMonitoringFinished(BaseException):
-    # A custom exception class to be raised when we are done monitoring the events
-    # This is done so we can be absolutely sure that it is not some other type of issue
-    pass
-
-
-def monitorTimerHandler(signum, frame):  # pylint: disable=unused-argument
-    # A handler function for the timer that will raise our custom exception
-    raise EventMonitoringFinished("monitoring duration has finished")
-
 
 # A set for storing what events are currently active, used when fail_fast is False
 activeEventSet = set()
@@ -81,10 +69,6 @@ if device_filter_str:
     # any empty string entries from the split, which would match against anything later on
     device_filter = list(filter(None, device_filter_list))
 
-
-# Set up a signal handler that will cause a signal.SIGALRM signal to trigger our timer handler
-signal.signal(signal.SIGALRM, monitorTimerHandler)
-
 # User configured 'Raise' event timeouts may be impacted here. This timeout is a realtime timeout,
 # but we can have events generated later which have a timestamp which was within the timeout window
 # if there is a raise timer configured.
@@ -98,10 +82,15 @@ fail_fast: bool = ctx.changeControl.args.get("fail_fast") == "True"
 
 # Create a stub to the event rAPI so we can send and receive requests and responses
 event_stub = ctx.getApiClient(EventServiceStub)
-try:
-    # Set an alarm to fire in <timeout> seconds
-    signal.alarm(timeout)
-    # Subscribe to the set of
+
+
+def monitor():
+    '''
+    Monitor function to pass to the doWithTimeout context method.
+    Subscribes to the events resource API and updates the set of active events
+    Raises a script failure if failfast is true and an event occurs
+    '''
+
     for resp in event_stub.Subscribe(EventStreamRequest(), timeout=timeout):
         # Response is of type EventStreamResponse
 
@@ -151,21 +140,22 @@ try:
         # A new event has occurred, log it
         ctx.alog(f"Event matching filters, \"{event_key}: {event_title}\" raised at {event_time}")
 
-        # If failfast is set, exit after disabling alarm
+        # If failfast is set, fail the action
         if fail_fast:
-            signal.alarm(0)
-            # Raising an uncaught exception fails the action with the following note
-            raise ValueError("new events detected in failfast mode")
+            raise ActionFailed("New events detected in failfast mode")
 
-        # Else add to the set of active events to check at the end of the timeout
+        # If failfast is false, add new event to the set of active events to be check at the end
         activeEventSet.add(resp.value.key.key.value)
-# Handle our custom exception raised by our timer here
-except EventMonitoringFinished as e:
+
+
+try:
+    ctx.doWithTimeout(monitor, timeout)
+# ctx.doWithTimeout raises a TimeoutExpiry when the timeout is exceeded. Handle this here
+# All other exceptions raised will fail the script
+except TimeoutExpiry:
     # Fail the action if any events that started during the action are still active
     # Only can happen if fail_fast is False, activeEventSet is always empty if fail_fast is True
     if len(activeEventSet) != 0:
         # Log the keys of the events that cause the failure
-        ctx.alog("New, unended events found after Change Control with keys: {}".format(activeEventSet))
-        # Raising an uncaught exception from our custom exception
-        # fails the action with the following note
-        raise UserWarning("new events detected after change control") from e
+        ctx.alog(f"New, unended events found after Change Control with keys: {activeEventSet}")
+        raise ActionFailed("New events detected after change control")

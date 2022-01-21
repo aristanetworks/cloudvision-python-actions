@@ -2,6 +2,8 @@
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the COPYING file.
 
+from cloudvision.cvlib import ActionFailed
+
 interfacesStr: str = ctx.changeControl.args.get("interfaces")
 # Split the comma separated string on the comma and strip of any whitespace
 interfacesList = [intf.strip() for intf in interfacesStr.split(',')]
@@ -9,7 +11,7 @@ interfacesList = [intf.strip() for intf in interfacesStr.split(',')]
 interfaces = list(filter(None, interfacesList))
 # If the list is empty, raise an error
 if not interfaces:
-    raise UserWarning("Interface list passed to script is empty")
+    raise ActionFailed("Interface list passed to script is empty")
 
 ctx.alog("Running 'show interfaces status' to check if any important interfaces are down")
 cmds = [
@@ -19,7 +21,7 @@ cmds = [
 cmdResponse = ctx.runDeviceCmds(cmds)
 interfaceStatuses = cmdResponse[1]['response'].get('interfaceStatuses')
 if not interfaceStatuses:
-    raise UserWarning(f"show interfaces status failed with: {cmdResponse[1]['error']}")
+    raise ActionFailed(f"Show interfaces status failed with: {cmdResponse[1]['error']}")
 
 down = []
 for interface in interfaces:
@@ -30,6 +32,6 @@ for interface in interfaces:
 # If any of the interfaces are down, report an error
 if down:
     downStr = ', '.join([str(elem) for elem in down])
-    raise UserWarning(f"Interface(s) in down state: {downStr}")
+    raise ActionFailed(f"Interface(s) in down state: {downStr}")
 
 ctx.alog("All specified interfaces are up")

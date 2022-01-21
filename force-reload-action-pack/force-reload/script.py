@@ -2,8 +2,9 @@
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the COPYING file.
 
+from cloudvision.cvlib import ActionFailed, TimeoutExpiry
+
 from time import sleep
-import signal
 from google.protobuf import wrappers_pb2 as wrappers
 
 # Import the inventory resource API models to be able to easily parse the rAPI output
@@ -11,18 +12,6 @@ from arista.inventory.v1 import models
 # Import the python service implementations of the inventory rAPI to be able to
 # handle sending and receiving requests and responses from the rAPI
 from arista.inventory.v1.services import DeviceServiceStub, DeviceStreamRequest
-
-
-class ReloadMonitoringFinished(BaseException):
-    # A custom exception class to be raised when we are done monitoring the device
-    # This is done so we can be absolutely sure that it is not some other type of issue
-    pass
-
-
-def monitorTimerHandler(signum, frame):  # pylint: disable=unused-argument
-    # A handler function for the timer that will raise our custom exception
-    raise ReloadMonitoringFinished("monitoring duration has finished")
-
 
 # Base case assumption where we assume device to be streaming initially
 currentStreamingStatus = models.STREAMING_STATUS_ACTIVE
@@ -52,14 +41,16 @@ filter = models.Device(key=device_key)
 req = DeviceStreamRequest()
 req.partial_eq_filter.append(filter)
 
-# Set up a signal handler that will cause a signal.SIGALRM signal to trigger our timer handler
-signal.signal(signal.SIGALRM, monitorTimerHandler)
-
 # Create a stub to the inventory rAPI so we can send and receive requests and responses
 stub = ctx.getApiClient(DeviceServiceStub)
-try:
-    # Set an alarm to fire in <timeout> seconds. This will call the handler we bound earlier
-    signal.alarm(monitorTimeout)
+
+
+def monitor():
+    '''
+    Monitor function to pass to the doWithTimeout context method.
+    Subscribes to the devices resource API and updates the current streaming status of the device
+    '''
+    global currentStreamingStatus
     # Subscribe to updates from our device
     for resp in stub.Subscribe(req, timeout=monitorTimeout):
         # resp.value is the device object, which has all the fields we want
@@ -68,8 +59,6 @@ try:
         # When the device comes back up, only allow for inactive case to pass the check
         if currentStreamingStatus == models.STREAMING_STATUS_INACTIVE and \
                 updateStreamingStatus == models.STREAMING_STATUS_ACTIVE:
-            # Turn off the alarm
-            signal.alarm(0)
             ctx.alog(f"Device {deviceID} is streaming, finishing after 5 second grace period")
             # The device has come back up. Wait a 5 second grace period to ensure SSH process
             # is back online after device streaming status is back up
@@ -77,15 +66,17 @@ try:
             break
         # Otherwise update the current streaming status to what the device's current one is
         currentStreamingStatus = updateStreamingStatus
-# Handle our custom exception raised by our timer here
-except ReloadMonitoringFinished as e:
+
+
+try:
+    ctx.doWithTimeout(monitor, monitorTimeout)
+# ctx.doWithTimeout raises a TimeoutExpiry when the timeout is exceeded. Handle this here
+# All other exceptions raised will fail the script
+except TimeoutExpiry:
     # Timer expired without ever seeing the streaming status change from active post-reload
     # Allow script to succeed but warn user of what happened
     if currentStreamingStatus == models.STREAMING_STATUS_ACTIVE:
         ctx.alog(f"Device {deviceID} is currently streaming but a reload was not seen.\n\
             Device {deviceID} may not have reloaded properly")
     else:
-        ctx.alog(f"Device {deviceID} didn't respond within {monitorTimeout} seconds post-reload")
-        # Raising an uncaught exception from our custom exception
-        # fails the action with the following note
-        raise UserWarning("Device reload failed") from e
+        raise ActionFailed(f"Device {deviceID} didn't respond within {monitorTimeout} seconds post-reload")

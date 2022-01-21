@@ -16,6 +16,7 @@
 # be reached.
 
 from typing import List, Dict
+from cloudvision.cvlib import ActionFailed
 
 # Check if any custom maintenance config exists.
 cmds = [
@@ -24,7 +25,7 @@ cmds = [
 cmdResponse: List[Dict] = ctx.runDeviceCmds(cmds)
 err = cmdResponse[0].get("error")
 if err:
-    raise UserWarning(f"Showing maintenance units failed with: {err}")
+    raise ActionFailed(f"Showing maintenance units failed with: {err}")
 response = cmdResponse[0]["response"]
 unitsystemchanged = False
 custommaintconfig = False
@@ -71,4 +72,4 @@ cmdResponses: List[Dict] = ctx.runDeviceCmds(cmds)
 # Only consider the first error that is encountered as following commands require previous ones to succeed
 errs = [resp.get('error') for resp in cmdResponses if resp.get('error')]
 if errs:
-    raise UserWarning(f"Exiting maintenance mode failed with: {errs[0]}")
+    raise ActionFailed(f"Exiting maintenance mode failed with: {errs[0]}")

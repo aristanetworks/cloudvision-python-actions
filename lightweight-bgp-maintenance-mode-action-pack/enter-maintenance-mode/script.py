@@ -16,6 +16,7 @@
 # be reached.
 
 from typing import List, Dict
+from cloudvision.cvlib import ActionFailed
 
 ctx.alog("Entering Maintenance Mode due to CVP Change Control action.")
 cmds = [
@@ -32,4 +33,4 @@ cmdResponses: List[Dict] = ctx.runDeviceCmds(cmds)
 # Only consider the first error that is encountered as following commands require previous ones to succeed
 errs = [resp.get('error') for resp in cmdResponses if resp.get('error')]
 if errs:
-    raise UserWarning(f"Entering maintenance mode failed with: {errs[0]}")
+    raise ActionFailed(f"Entering maintenance mode failed with: {errs[0]}")

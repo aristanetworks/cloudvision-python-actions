@@ -2,6 +2,8 @@
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the COPYING file.
 
+from cloudvision.cvlib import ActionFailed
+
 import paramiko
 
 # Extract and ensure args are of the correct type
@@ -50,4 +52,4 @@ for device_ip in deviceList:
 if failLimit > failed:
     ctx.alog(f"page_check: Passed. {passed} devices of {len(deviceList)} can access {pageUrl}")
 else:
-    raise UserWarning(f"page_check: Failed. {failed} devices were not able to access {pageUrl}")
+    raise ActionFailed(f"Unable to access {pageUrl} on {failed} devices")

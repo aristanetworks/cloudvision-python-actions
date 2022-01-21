@@ -2,6 +2,8 @@
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the COPYING file.
 
+from cloudvision.cvlib import ActionFailed
+
 from time import sleep
 from google.protobuf.timestamp_pb2 import Timestamp
 from cloudvision.Connector.grpc_client import create_query
@@ -44,15 +46,15 @@ checkWait = int(checkWait) if checkWait else 60
 with ctx.getCvClient() as client:
     ccStartTs = ctx.changeControl.getStartTime(client)
     if not ccStartTs:
-        raise UserWarning("No change control ID present")
+        raise ActionFailed("No change control ID present")
     ccStart = Timestamp()
     ccStart.FromNanoseconds(int(ccStartTs))
 
     device = ctx.getDevice()
     if device is None or device.id is None:
-        err = ("Missing change control device" if device is None
-               else "device {} is missing 'id'".format(device))
-        raise UserWarning(err)
+        err = "Missing change control device" if device is None \
+            else f"device {device} is missing 'id'"
+        raise ActionFailed(err)
     pathElts = [
         "Devices", device.id, "versioned-data", "counts", "bgpState",
     ]
@@ -90,7 +92,6 @@ with ctx.getCvClient() as client:
         err = ("Inconsistent BGP counts for Device {} were not within expected difference of {}.\n"
                "Before CC: {}\n"
                "After CC: {}").format(device.id, expectedStatsDiff, prevBGPStats, currBGPStats)
-        ctx.alog(err)
-        raise UserWarning("BGP_check: Failed")
+        raise ActionFailed(err)
 
-ctx.alog("BGP stats were stable accross change control")
+ctx.alog("BGP stats were stable across change control")

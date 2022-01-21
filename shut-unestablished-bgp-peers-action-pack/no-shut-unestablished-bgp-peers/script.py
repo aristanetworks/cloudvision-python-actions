@@ -5,6 +5,7 @@
 from typing import List, Dict
 from google.protobuf.timestamp_pb2 import Timestamp
 from cloudvision.Connector.grpc_client import GRPCClient, create_query, create_notification
+from cloudvision.cvlib import ActionFailed
 
 cmdOut: List[Dict] = ctx.runDeviceCmds(["enable", "show hostname"])
 # Iterate through the list of responses for the commands, and if an error occurred in any of the
@@ -13,7 +14,7 @@ cmdOut: List[Dict] = ctx.runDeviceCmds(["enable", "show hostname"])
 # to succeed
 errs: List[str] = [resp.get('error') for resp in cmdOut if resp.get('error')]
 if errs:
-    raise UserWarning(f"Unable to get hostname, failed with: {errs[0]}")
+    raise ActionFailed(f"Unable to get hostname, failed with: {errs[0]}")
 
 hostname = cmdOut[1]["response"]["hostname"]
 
@@ -37,7 +38,7 @@ for batch in client.get([create_query([(path, [key])], "cvp")]):
             cmdOut = ctx.runDeviceCmds(cmds)
             errs: List[str] = [resp.get('error') for resp in cmdOut if resp.get('error')]
             if errs:
-                raise UserWarning(f"Unable to run unshut commands, failed with: {errs[0]}")
+                raise ActionFailed(f"Unable to run unshut commands, failed with: {errs[0]}")
 
 # If a command list exist (and all commands ran successfully), issue a delete for it
 if commandsExist:

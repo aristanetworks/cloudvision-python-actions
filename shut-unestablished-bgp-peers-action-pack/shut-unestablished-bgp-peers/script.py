@@ -5,6 +5,7 @@
 from typing import List, Dict, Tuple
 from google.protobuf.timestamp_pb2 import Timestamp
 from cloudvision.Connector.grpc_client import GRPCClient, create_notification
+from cloudvision.cvlib import ActionFailed
 
 # Get the pending BGP peer status
 cmdOut: List[Dict] = ctx.runDeviceCmds(["enable", "show hostname", "show bgp convergence vrf all"])
@@ -15,7 +16,7 @@ cmdOut: List[Dict] = ctx.runDeviceCmds(["enable", "show hostname", "show bgp con
 # to succeed
 errs: List[str] = [resp.get('error') for resp in cmdOut if resp.get('error')]
 if errs:
-    raise UserWarning(f"Unable to get hostname/BGP convergence status, failed with: {errs[0]}")
+    raise ActionFailed(f"Unable to get hostname/BGP convergence status, failed with: {errs[0]}")
 
 hostname = cmdOut[1]["response"]["hostname"]
 pendingBgpPeers = cmdOut[2]["response"]
@@ -29,7 +30,7 @@ for vrf in pendingBgpPeers['vrfs']:
 cmdOut: List[Dict] = ctx.runDeviceCmds(["enable", "show ip bgp summary vrf all"])
 errs: List[str] = [resp.get('error') for resp in cmdOut if resp.get('error')]
 if errs:
-    raise UserWarning(f"Unable to get BGP summary, failed with: {errs[0]}")
+    raise ActionFailed(f"Unable to get BGP summary, failed with: {errs[0]}")
 bgpSummary = cmdOut[1]["response"]
 
 checkEvpn = True
@@ -39,7 +40,7 @@ if errs:
     if errs[0] == "Not supported":
         checkEvpn = False
     else:
-        raise UserWarning(f"Unable to get BGP evpn summary, failed with: {errs[0]}")
+        raise ActionFailed(f"Unable to get BGP evpn summary, failed with: {errs[0]}")
 
 shutdownBgpPeerList: List[Tuple] = []
 if pendingPeersVrfList:
@@ -102,7 +103,7 @@ if pendingPeersVrfList:
     # check to ensure that none of the commands failed
     errs: List[str] = [resp.get('error') for resp in cmdOut if resp.get('error')]
     if errs:
-        raise UserWarning(f"Failed to shut down all peers with: {errs[0]}")
+        raise ActionFailed(f"Failed to shut down all peers with: {errs[0]}")
 
     ctx.alog("Inactive BGP peers successfully shutdown")
 else:

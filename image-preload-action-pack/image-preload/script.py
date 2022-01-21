@@ -8,6 +8,8 @@
 from typing import List, Dict
 from urllib.parse import urljoin
 
+from cloudvision.cvlib import ActionFailed
+
 authority = ctx.changeControl.args.get("authority")
 path = ctx.changeControl.args.get("path")
 eos = ctx.changeControl.args.get("eos")
@@ -26,5 +28,5 @@ cmdResponses: List[Dict] = ctx.runDeviceCmds(cmds)
 # Only consider the first error that is encountered as following commands require previous ones to succeed
 errs = [resp.get('error') for resp in cmdResponses if resp.get('error')]
 if errs:
-    raise UserWarning(f"Preloading image failed with: {errs[0]}")
+    raise ActionFailed(f"Preloading image failed with: {errs[0]}")
 ctx.alog("Downloading of Eos image completed successfully")

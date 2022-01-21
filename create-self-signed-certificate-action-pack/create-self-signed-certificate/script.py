@@ -13,6 +13,7 @@
 # management api http-commands
 #   protocol https ssl profile SSL_profile
 
+from cloudvision.cvlib import ActionFailed
 
 # 1. Setup:
 device = ctx.getDevice()
@@ -49,7 +50,7 @@ output_cmd_list = ctx.runDeviceCmds(cmds)
 ctx.alog(f"Outputs: {output_cmd_list}")
 for index, cmdOutput in enumerate(output_cmd_list):
     if 'error' in cmdOutput.keys() and cmdOutput['error'] != '':
-        raise UserWarning(f"Error: switch {fqdn} - Command: '{cmds[index]}' \n Error: {cmdOutput}")
+        raise ActionFailed(f"Error: switch {fqdn} - Command: '{cmds[index]}' \n Error: {cmdOutput}")
 
 
 # 4. Verification step:
