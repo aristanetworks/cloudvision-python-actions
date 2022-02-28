@@ -1,0 +1,4 @@
+type: PACKAGE
+version: 1.0.0
+name: shut-bgp-peers Action package
+description: Action packages containing scripts to shut down/restore any BGP Unestablished Peers so that Exiting BGP maintenance mode will not fail post image upgrade

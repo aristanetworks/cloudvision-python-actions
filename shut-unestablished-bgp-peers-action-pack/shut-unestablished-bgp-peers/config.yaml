@@ -1,0 +1,11 @@
+type: ACTION
+language: PYTHON_3
+name: Shut Unestablished BGP Peers
+description: Shuts down any BGP Unestablished Peers so that Exiting BGP maintenance mode will not fail post image upgrade
+file: script.py
+static-params: []
+dynamic-params:
+  - name: DeviceID
+    description: The ID of the device to run this script against
+    required: true
+    hidden: false

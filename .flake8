@@ -5,4 +5,7 @@ ignore =
     # unable to detect undefined names, may be encountered when using rAPIs in scripts
     F403,
     # undefined name <name>, will be caused by the existence of ctx in the scripts
-    F821
+    F821,
+    # Line break occurred before a binary operator, older anti pattern, they should be like this
+    # as W504 is also hit in changes, which says the opposite
+    W503
