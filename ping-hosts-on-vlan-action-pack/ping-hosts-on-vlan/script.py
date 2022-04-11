@@ -2,6 +2,9 @@
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the COPYING file.
 
+import ipaddress
+
+
 def string_to_list(string_to_convert):
     """ Returns the input string as a list object """
     numbers = []
@@ -35,22 +38,34 @@ for vlan_id in vlan_ids:
         continue
 
     try:
-        svi_virtual_ip_address = interface_info["interfaceAddress"]["virtualIp"]["address"]
+        ip_address = interface_info["interfaceAddress"]["virtualIp"]["address"]
+        subnet_mask = interface_info["interfaceAddress"]["virtualIp"]["maskLen"]
+
+        if ip_address == "0.0.0.0":
+            ip_address = interface_info["interfaceAddress"]["primaryIp"]["address"]
+            subnet_mask = interface_info["interfaceAddress"]["primaryIp"]["maskLen"]
     except KeyError:
-        ctx.alog(f"Vlan{vlan_id} does not have a Virtual IP address assigned to it.")
-
-    if svi_virtual_ip_address == "0.0.0.0":
+        ctx.alog(f"Unable to retrieve IP address for interface Vlan{vlan_id}.")
         continue
+
+    if ip_address == "0.0.0.0":
+        ctx.alog(f"No IP address configured on interface Vlan{vlan_id}.")
+        continue
+
+    ip_address_object = ipaddress.ip_interface(f"{ip_address}/{subnet_mask}")
+    ip_network_hosts = list(ip_address_object.network.hosts())
     vrf_name = interface_info["vrf"]
-    if vrf_name == "default":
-        garp_command = f"bash timeout 5 sudo /sbin/arping -A -c 1 -I " \
-            f"vlan{vlan_id} {svi_virtual_ip_address}"
-    else:
-        garp_command = f"bash timeout 5 sudo ip netns exec ns-{vrf_name} " \
-            f"/sbin/arping -A -c 1 -I vlan{vlan_id} {svi_virtual_ip_address}"
+    ping_commands = []
+    for host_address in ip_network_hosts:
+        if vrf_name == "default":
+            ping_command = f"ping ip {host_address} repeat 1 timeout 1"
+        else:
+            ping_command = f"ping vrf {vrf_name} ip {host_address} repeat 1 timeout 1"
+        ping_commands.append(ping_command)
 
-    ctx.alog(f"Sending out GARP on Vlan{vlan_id}")
-    garp_output = ctx.runDeviceCmds([garp_command])
-    ctx.alog(f"Result of GARP: {garp_output[0]['response']}")
+    # Ping individuallly
+    for ping_command in ping_commands:
+        ping_output = ctx.runDeviceCmds([ping_command])[0]["response"]
+        ctx.alog(f"{ping_command} output: {ping_output}")
 
-ctx.alog("Executed GARP on all SVIs")
+ctx.alog("Successfully attempted to ping all hosts on all supplied SVI subnets")
