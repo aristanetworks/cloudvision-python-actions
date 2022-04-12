@@ -1,0 +1,16 @@
+type: ACTION
+language: PYTHON_3
+name: GARP on SVI
+description: This action will issue a GARP from the virtual IP address configured on the provided VLAN IDs' SVIs.
+file: script.py
+static-params: []
+dynamic-params:
+  - name: DeviceID
+    description: The ID of the device to reload
+    required: true
+    hidden: false
+  - name: VLAN IDs
+    description: Enter the VLAN IDs of the SVI's you wish to perform a GARP from (Multiple VLAN IDs should be separated by commas)
+    required: true
+    hidden: false
+    default: ""
