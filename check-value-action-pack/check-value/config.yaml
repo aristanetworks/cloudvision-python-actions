@@ -1,0 +1,35 @@
+type: ACTION
+language: PYTHON_3
+name: Check Path
+description: Checks the path and key specified and continues if the specified value is present, or if the key is present if the value is left blank, and will continue looking for the value up to a specified maximum number of attempts
+file: script.py
+static-params: []
+dynamic-params:
+  - name: dataset
+    description: The dataset to search during execution
+    required: true
+    hidden: false
+    default: "analytics"
+  - name: path
+    description: The path to search for in the script. e.g. "path/to/value"
+    required: true
+    hidden: false
+  - name: key
+    description: The key to check the value of
+    required: true
+    hidden: false
+  - name: value
+    description: The value to compare the required value to. Defaults to an empty string, which will instead only check to see that the key exists
+    required: true
+    hidden: false
+    default: ""
+  - name: attempts
+    description: The maximum number of attempts to check the value
+    required: true
+    hidden: false
+    default: "5"
+  - name: interval
+    description: The interval between attempts in seconds
+    required: true
+    hidden: false
+    default: "3"
