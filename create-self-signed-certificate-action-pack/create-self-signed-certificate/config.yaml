@@ -1,0 +1,61 @@
+type: ACTION
+language: PYTHON_3
+name: Self-signed certificate/key creation
+description: This action will generate a self-signed certificate and an associate key on the devices that can be used in an SSL profile.
+file: script.py
+static-params: []
+dynamic-params:
+  - name: DeviceID
+    description: The ID of the device to run this script against
+    required: true
+    hidden: false
+  - name: cert_file
+    description: Certificate name
+    required: true
+    hidden: false
+    default: "self-signed.crt"
+  - name: country
+    description: Two-Letter Country Code for use in subject
+    required: true
+    hidden: false
+    default: "US"
+  - name: email
+    description: Email address for use in subject and subject alternative name
+    required: true
+    hidden: false
+    default: ""
+  - name: key_file
+    description: Key name
+    required: true
+    hidden: false
+    default: "self-signed.key"
+  - name: key_length
+    description: Key length
+    required: true
+    hidden: false
+    default: "2048"
+  - name: locality
+    description: Locality Name for use in subject
+    required: true
+    hidden: false
+    default: ""
+  - name: organization
+    description: Organization Name for use in subject
+    required: true
+    hidden: false
+    default: ""
+  - name: organization_unit
+    description: Organization Unit Name for use in subject
+    required: true
+    hidden: false
+    default: ""
+  - name: state
+    description: State for use in subject
+    required: true
+    hidden: false
+    default: ""
+  - name: validity
+    description: Duration of validity of the certificate
+    required: true
+    hidden: false
+    default: "365"

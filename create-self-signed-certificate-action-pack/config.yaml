@@ -1,0 +1,4 @@
+type: PACKAGE
+version: 1.0.0
+name: create-self-signed-certificate Action package
+description: Action package containing a script that will generate a self-signed certificate and an associate key on the device.
