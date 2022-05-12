@@ -15,11 +15,13 @@
 # you have orphan ports or other conditions that are causing minimum traffic thresholds to never
 # be reached.
 
+from typing import List, Dict
+
 # Check if any custom maintenance config exists.
 cmds = [
     "show maintenance units",
 ]
-cmdResponse: list[dict] = ctx.runDeviceCmds(cmds)
+cmdResponse: List[Dict] = ctx.runDeviceCmds(cmds)
 err = cmdResponse[0].get("error")
 if err:
     raise UserWarning(f"Showing maintenance units failed with: {err}")
@@ -63,7 +65,7 @@ else:
     ]
 
 
-cmdResponses: list[dict] = ctx.runDeviceCmds(cmds)
+cmdResponses: List[Dict] = ctx.runDeviceCmds(cmds)
 # Iterate through the list of responses for the commands, and if an error occurred in
 # any of the commands, raise an exception
 # Only consider the first error that is encountered as following commands require previous ones to succeed

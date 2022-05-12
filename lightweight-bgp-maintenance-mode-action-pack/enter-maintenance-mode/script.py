@@ -15,6 +15,8 @@
 # you have orphan ports or other conditions that are causing minimum traffic thresholds to never
 # be reached.
 
+from typing import List, Dict
+
 ctx.alog("Entering Maintenance Mode due to CVP Change Control action.")
 cmds = [
     "enable",
@@ -24,7 +26,7 @@ cmds = [
     "quiesce",
     "copy running-config startup-config",
 ]
-cmdResponses: list[dict] = ctx.runDeviceCmds(cmds)
+cmdResponses: List[Dict] = ctx.runDeviceCmds(cmds)
 # Iterate through the list of responses for the commands, and if an error occurred in
 # any of the commands, raise an exception
 # Only consider the first error that is encountered as following commands require previous ones to succeed
