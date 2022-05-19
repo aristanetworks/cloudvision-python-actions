@@ -18,7 +18,7 @@
 from typing import List, Dict
 from cloudvision.cvlib import ActionFailed
 
-ctx.alog("Entering Maintenance Mode due to CVP Change Control action.")
+ctx.info("Entering Maintenance Mode due to CVP Change Control action.")
 cmds = [
     "enable",
     "configure",

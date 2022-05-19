@@ -1,4 +1,4 @@
 type: PACKAGE
-version: 1.1.0
+version: 1.2.0
 name: check-switch-type Action package
 description: Action package containing a script to check that a switch is of a specified type

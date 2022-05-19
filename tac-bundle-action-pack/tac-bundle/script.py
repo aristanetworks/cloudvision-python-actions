@@ -8,7 +8,7 @@ if not srn:
     srn = '1337'
 cmd = ["show version"]
 version = ctx.runDeviceCmds(cmd)[0]['response']['version']
-ctx.alog(str(version))
+ctx.info(str(version))
 vl = version.split('.')
 
 # If EOS is higher than 4.26.1F+ we can run the new support-bundle command
@@ -29,11 +29,11 @@ else:
         baseline.append(f"show arp vrf all | gzip > /mnt/flash/{srn}-show-arp-vrf-all-{dt}.log.gz")
     baseline.append(f"bash timeout 10 sudo tar -cvf - /mnt/flash/TAC-* > /mnt/flash/support-bundle-{srn}-{dt}.tar")
 
-ctx.alog(f"Gathering baseline logs from device {ctx.getDevice().ip}")
+ctx.info(f"Gathering baseline logs from device {ctx.getDevice().ip}")
 ctx.runDeviceCmds(baseline, fmt="text")
 
 check_files = ["dir /all flash:"]
-ctx.alog(f"Listing the content of flash on device {ctx.getDevice().ip}")
+ctx.info(f"Listing the content of flash on device {ctx.getDevice().ip}")
 result = ctx.runDeviceCmds(check_files)
-ctx.alog(str(result[0]['response']))
-ctx.alog("Please upload the support-bundle on the switch(es) flash to the TAC case.")
+ctx.info(str(result[0]['response']))
+ctx.info("Please upload the support-bundle on the switch(es) flash to the TAC case.")

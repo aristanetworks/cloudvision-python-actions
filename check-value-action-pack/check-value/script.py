@@ -31,7 +31,7 @@ for i in range(attempts):
         if key in kvp:
             if (not value) or (kvp[key] == value):
                 break
-            ctx.alog(f"Key {key} at path {'/'.join(path)} contains unexpected value {kvp[key]}")
+            ctx.warning(f"Key {key} at path {'/'.join(path)} contains unexpected value {kvp[key]}")
     sleep(interval)
 else:
     if value:

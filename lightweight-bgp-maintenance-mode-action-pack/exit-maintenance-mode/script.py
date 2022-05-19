@@ -39,7 +39,7 @@ if "maintenanceUnits" in response:
         if response["maintenanceUnits"]["System"]["unitProfile"] != "Default":
             unitsystemchanged = True
 
-ctx.alog("Exiting Maintenance Mode due to CVP Change Control action.")
+ctx.info("Exiting Maintenance Mode due to CVP Change Control action.")
 if custommaintconfig is False:
     cmds = [
         "enable",

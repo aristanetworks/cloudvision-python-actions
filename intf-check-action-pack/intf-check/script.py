@@ -13,7 +13,7 @@ interfaces = list(filter(None, interfacesList))
 if not interfaces:
     raise ActionFailed("Interface list passed to script is empty")
 
-ctx.alog("Running 'show interfaces status' to check if any important interfaces are down")
+ctx.info("Running 'show interfaces status' to check if any important interfaces are down")
 cmds = [
     "enable",
     "show interfaces status",
@@ -34,4 +34,4 @@ if down:
     downStr = ', '.join([str(elem) for elem in down])
     raise ActionFailed(f"Interface(s) in down state: {downStr}")
 
-ctx.alog("All specified interfaces are up")
+ctx.info("All specified interfaces are up")

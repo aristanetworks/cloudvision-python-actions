@@ -105,6 +105,6 @@ if pendingPeersVrfList:
     if errs:
         raise ActionFailed(f"Failed to shut down all peers with: {errs[0]}")
 
-    ctx.alog("Inactive BGP peers successfully shutdown")
+    ctx.info("Inactive BGP peers successfully shutdown")
 else:
-    ctx.alog("No inactive BGP peers to shutdown")
+    ctx.info("No inactive BGP peers to shutdown")

@@ -30,7 +30,7 @@ path = ["changecontrol", "actionTempStorage", "shut-bgp-action"]
 for batch in client.get([create_query([(path, [key])], "cvp")]):
     for notif in batch["notifications"]:
         if len(notif["updates"]) == 0:
-            ctx.alog("No shutdown BGP peers to be restored")
+            ctx.info("No shutdown BGP peers to be restored")
             continue
         commandsExist = True
         for _, commandList in notif["updates"].items():
@@ -45,4 +45,4 @@ if commandsExist:
     ts = Timestamp()
     ts.GetCurrentTime()
     client.publish(dId="cvp", notifs=[create_notification(ts, path, deletes=[key])])
-    ctx.alog("Shutdown BGP peers successfully restored")
+    ctx.info("Shutdown BGP peers successfully restored")

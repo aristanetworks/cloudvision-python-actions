@@ -22,19 +22,19 @@ switch = ctx.getDevice()
 vlan_ids = ctx.changeControl.args['VLAN IDs']
 
 if vlan_ids is not None:
-    ctx.alog(f"Supplied VLANs: {vlan_ids}")
+    ctx.info(f"Supplied VLANs: {vlan_ids}")
     vlan_ids = string_to_list(vlan_ids)
 else:
-    ctx.alog("No VLAN IDs provided")
+    ctx.info("No VLAN IDs provided")
 
 for vlan_id in vlan_ids:
-    ctx.alog(f"Getting interface info on {switch.ip} for Vlan{vlan_id}")
+    ctx.info(f"Getting interface info on {switch.ip} for Vlan{vlan_id}")
     show_ip_interface_output = ctx.runDeviceCmds([f"show ip interface vlan {vlan_id}"])
-    ctx.alog(f"show ip interface vlan {vlan_id} output: {show_ip_interface_output}")
+    ctx.info(f"show ip interface vlan {vlan_id} output: {show_ip_interface_output}")
     try:
         interface_info = show_ip_interface_output[0]["response"]["interfaces"][f"Vlan{vlan_id}"]
     except KeyError:
-        ctx.alog(f"Couldn't retrieve IP interface details for Vlan{vlan_id}.")
+        ctx.error(f"Couldn't retrieve IP interface details for Vlan{vlan_id}.")
         continue
 
     try:
@@ -45,11 +45,11 @@ for vlan_id in vlan_ids:
             ip_address = interface_info["interfaceAddress"]["primaryIp"]["address"]
             subnet_mask = interface_info["interfaceAddress"]["primaryIp"]["maskLen"]
     except KeyError:
-        ctx.alog(f"Unable to retrieve IP address for interface Vlan{vlan_id}.")
+        ctx.error(f"Unable to retrieve IP address for interface Vlan{vlan_id}.")
         continue
 
     if ip_address == "0.0.0.0":
-        ctx.alog(f"No IP address configured on interface Vlan{vlan_id}.")
+        ctx.warning(f"No IP address configured on interface Vlan{vlan_id}.")
         continue
 
     ip_address_object = ipaddress.ip_interface(f"{ip_address}/{subnet_mask}")
@@ -66,6 +66,6 @@ for vlan_id in vlan_ids:
     # Ping individuallly
     for ping_command in ping_commands:
         ping_output = ctx.runDeviceCmds([ping_command])[0]["response"]
-        ctx.alog(f"{ping_command} output: {ping_output}")
+        ctx.info(f"{ping_command} output: {ping_output}")
 
-ctx.alog("Successfully attempted to ping all hosts on all supplied SVI subnets")
+ctx.info("Successfully attempted to ping all hosts on all supplied SVI subnets")

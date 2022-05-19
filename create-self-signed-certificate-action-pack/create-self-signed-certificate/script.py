@@ -17,11 +17,11 @@ from cloudvision.cvlib import ActionFailed
 
 # 1. Setup:
 device = ctx.getDevice()
-ctx.alog(f"device_id: [{device.id}] - ip: [{device.ip}] - hostname: [{device.hostName}]")
+ctx.info(f"device_id: [{device.id}] - ip: [{device.ip}] - hostname: [{device.hostName}]")
 cmdResponse = ctx.runDeviceCmds(["enable", "show hostname"])
 hostname = cmdResponse[1]['response']['hostname']
 fqdn = cmdResponse[1]['response']['fqdn']
-ctx.alog(f"Creating self-signed certificate for device with fqdn: {fqdn} - hostname: {hostname}")
+ctx.info(f"Creating self-signed certificate for device with fqdn: {fqdn} - hostname: {hostname}")
 
 
 # 2. Commands creation:
@@ -42,12 +42,12 @@ cmds = [
         f"email {args['email']} "
         f"subject-alternative-name dns {fqdn} email {args['email']} ip {device.ip}")
 ]
-ctx.alog(f"Command to run on the device: {cmds}")
+ctx.info(f"Command to run on the device: {cmds}")
 
 
 # 3. Run the commands on the device and check for errors:
 output_cmd_list = ctx.runDeviceCmds(cmds)
-ctx.alog(f"Outputs: {output_cmd_list}")
+ctx.info(f"Outputs: {output_cmd_list}")
 for index, cmdOutput in enumerate(output_cmd_list):
     if 'error' in cmdOutput.keys() and cmdOutput['error'] != '':
         raise ActionFailed(f"Error: switch {fqdn} - Command: '{cmds[index]}' \n Error: {cmdOutput}")
@@ -56,5 +56,5 @@ for index, cmdOutput in enumerate(output_cmd_list):
 # 4. Verification step:
 cert_dir_output = ctx.runDeviceCmds(["enable", "dir certificate:"])
 key_dir_output = ctx.runDeviceCmds(["enable", "dir sslkey:"])
-ctx.alog(f"Verification - Certificate directory: {cert_dir_output[1]['response']}")
-ctx.alog(f"Verification - Key directory: {key_dir_output[1]['response']}")
+ctx.info(f"Verification - Certificate directory: {cert_dir_output[1]['response']}")
+ctx.info(f"Verification - Key directory: {key_dir_output[1]['response']}")

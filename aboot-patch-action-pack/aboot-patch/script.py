@@ -12,7 +12,7 @@ vrf = ctx.changeControl.args.get("vrf")
 cmdResponse = ctx.runDeviceCmds(["enable", "show hostname"])
 hostname = cmdResponse[1]['response']['hostname']
 
-ctx.alog(f"Running installation of Aboot patch on {hostname} over {vrf} VRF")
+ctx.info(f"Running installation of Aboot patch on {hostname} over {vrf} VRF")
 cmds = [
     "enable",
     f"cli vrf {vrf}",
@@ -26,4 +26,4 @@ cmdResponses: List[Dict] = ctx.runDeviceCmds(cmds)
 errs = [resp.get('error') for resp in cmdResponses if resp.get('error')]
 if errs:
     raise ActionFailed(f"Patch installation failed with: {errs[0]}")
-ctx.alog("Patch successfully applied")
+ctx.info("Patch successfully applied")

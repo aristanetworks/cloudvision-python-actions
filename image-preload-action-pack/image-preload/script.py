@@ -16,7 +16,7 @@ eos = ctx.changeControl.args.get("eos")
 vrf = ctx.changeControl.args.get("vrf")
 imageUrl = urljoin(f"https://{authority}", path + eos)
 
-ctx.alog(f"Downloading EOS image from {imageUrl}")
+ctx.info(f"Downloading EOS image from {imageUrl}")
 cmds = [
     "enable",
     f"cli vrf {vrf}",
@@ -29,4 +29,4 @@ cmdResponses: List[Dict] = ctx.runDeviceCmds(cmds)
 errs = [resp.get('error') for resp in cmdResponses if resp.get('error')]
 if errs:
     raise ActionFailed(f"Preloading image failed with: {errs[0]}")
-ctx.alog("Downloading of Eos image completed successfully")
+ctx.info("Downloading of Eos image completed successfully")

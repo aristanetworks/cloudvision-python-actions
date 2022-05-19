@@ -23,13 +23,13 @@ monitorTimeout = int(monitorTimeout) if monitorTimeout else 1200
 
 deviceID = ctx.getDevice().id
 
-ctx.alog(f"Reloading device {deviceID}")
+ctx.info(f"Reloading device {deviceID}")
 cmds = [
     'enable',
     'reload now',
 ]
 ctx.runDeviceCmds(cmds)
-ctx.alog(f"Device {deviceID} was reloaded, monitoring streaming status to come back up")
+ctx.info(f"Device {deviceID} was reloaded, monitoring streaming status to come back up")
 
 # Create a filter to only receive updates for the device we want from the resource API
 # Create a deviceKey with the device serial number to use for filtering
@@ -59,7 +59,7 @@ def monitor():
         # When the device comes back up, only allow for inactive case to pass the check
         if currentStreamingStatus == models.STREAMING_STATUS_INACTIVE and \
                 updateStreamingStatus == models.STREAMING_STATUS_ACTIVE:
-            ctx.alog(f"Device {deviceID} is streaming, finishing after 5 second grace period")
+            ctx.info(f"Device {deviceID} is streaming, finishing after 5 second grace period")
             # The device has come back up. Wait a 5 second grace period to ensure SSH process
             # is back online after device streaming status is back up
             sleep(5)
@@ -76,7 +76,7 @@ except TimeoutExpiry:
     # Timer expired without ever seeing the streaming status change from active post-reload
     # Allow script to succeed but warn user of what happened
     if currentStreamingStatus == models.STREAMING_STATUS_ACTIVE:
-        ctx.alog(f"Device {deviceID} is currently streaming but a reload was not seen.\n\
+        ctx.warning(f"Device {deviceID} is currently streaming but a reload was not seen.\n\
             Device {deviceID} may not have reloaded properly")
     else:
         raise ActionFailed(f"Device {deviceID} didn't respond within {monitorTimeout} seconds post-reload")

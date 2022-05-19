@@ -6,7 +6,7 @@ from cloudvision.cvlib import ActionFailed
 
 switchType = ctx.changeControl.args.get("switchType")
 
-ctx.alog("Running show version from script to check switch type")
+ctx.info("Running show version from script to check switch type")
 cmds = [
     "enable",
     "show version",
@@ -22,4 +22,4 @@ hostname = cmdResponse[2]["response"]["hostname"]
 if switchType not in modelName:
     raise ActionFailed(f"Switch {hostname} is not of type {switchType} but is of type {modelName}")
 
-ctx.alog(f"SUCCESS: switch {hostname} is of type {modelName}")
+ctx.info(f"Switch {hostname} is of type {modelName}")

@@ -4,7 +4,7 @@
 
 import re
 
-ctx.alog("Removing all currently unused EOSs from /mnt/flash")
+ctx.info("Removing all currently unused EOSs from /mnt/flash")
 
 # Get current boot image
 # runDeviceCommands takes a list of commands to run on the device, and receives a list of responses
@@ -30,13 +30,13 @@ eosList = re.findall(r'EOS.*\.swi', eosListTxt)
 
 # If there are no unused images, exit after logging
 if len(eosList) == 1:
-    ctx.alog("No unused EOS images to remove")
+    ctx.info("No unused EOS images to remove")
 else:
     # For each of these swi's not use for boot, delete them
     for eos in eosList:
         if eos != eosBootImage:
-            ctx.alog("Removing unused eos image {}".format(eos))
+            ctx.info("Removing unused eos image {}".format(eos))
             cmd = "delete flash:" + eos
             cmdOut = ctx.runDeviceCmds(["enable", cmd])
 
-    ctx.alog("All unused EOS images from /mnt/flash removed")
+    ctx.info("All unused EOS images from /mnt/flash removed")

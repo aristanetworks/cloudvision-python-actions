@@ -56,7 +56,7 @@ def isMlagUp():
 
 # Retrieve and parse the string arg
 duration = int(ctx.changeControl.args.get("checkDuration"))
-ctx.alog(f"Checking MLAG Health for a maximum of {duration} seconds")
+ctx.info(f"Checking MLAG Health for a maximum of {duration} seconds")
 
 # Keep checking mlag while there is still time remaining
 while duration:
@@ -64,7 +64,7 @@ while duration:
     if mlagUp:
         break
     # If mlag is not up, log it's current status
-    ctx.alog(status)
+    ctx.info(status)
     # Calculate how long before next check, and ensure that we don't go over the timeout
     sleepTime = max(pollInterval, duration)
     time.sleep(sleepTime)
@@ -81,4 +81,4 @@ else:
         raise ActionFailed((f"MLAG ports are still disabled after {duration} seconds.\n"
                            f"Final mlag check reported current status of mlag as \"{status}\""))
 
-ctx.alog("MLAG ports are now active.")
+ctx.info("MLAG ports are now active.")

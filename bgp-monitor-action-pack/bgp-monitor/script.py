@@ -94,4 +94,4 @@ with ctx.getCvClient() as client:
                "After CC: {}").format(device.id, expectedStatsDiff, prevBGPStats, currBGPStats)
         raise ActionFailed(err)
 
-ctx.alog("BGP stats were stable across change control")
+ctx.info("BGP stats were stable across change control")

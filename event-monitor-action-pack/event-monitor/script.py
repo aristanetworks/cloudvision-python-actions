@@ -138,7 +138,7 @@ def monitor():
         event_time: str = resp.time.ToDatetime().strftime("%Y/%m/%d: %H:%M:%S")
         event_key: str = resp.value.key.key.value
         # A new event has occurred, log it
-        ctx.alog(f"Event matching filters, \"{event_key}: {event_title}\" raised at {event_time}")
+        ctx.info(f"Event matching filters, \"{event_key}: {event_title}\" raised at {event_time}")
 
         # If failfast is set, fail the action
         if fail_fast:
@@ -157,5 +157,5 @@ except TimeoutExpiry:
     # Only can happen if fail_fast is False, activeEventSet is always empty if fail_fast is True
     if len(activeEventSet) != 0:
         # Log the keys of the events that cause the failure
-        ctx.alog(f"New, unended events found after Change Control with keys: {activeEventSet}")
+        ctx.error(f"New, unended events found after Change Control with keys: {activeEventSet}")
         raise ActionFailed("New events detected after change control")
