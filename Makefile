@@ -6,6 +6,7 @@
 
 lint:
 	flake8
+	./check_copyright.sh
 
 # Packages up all actionpacks in the repo
 actionpacks:
