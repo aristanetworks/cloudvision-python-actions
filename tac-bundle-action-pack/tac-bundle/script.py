@@ -2,7 +2,7 @@
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the COPYING file.
 dt = "$HOSTNAME-$(date +%Y_%m_%d.%H_%M_%S)"
-srn: str = ctx.changeControl.args.get("SRNumber")
+srn: str = ctx.action.args.get("SRNumber")
 
 if not srn:
     srn = '1337'

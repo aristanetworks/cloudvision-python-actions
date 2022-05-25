@@ -17,7 +17,7 @@ from arista.inventory.v1.services import DeviceServiceStub, DeviceStreamRequest
 currentStreamingStatus = models.STREAMING_STATUS_ACTIVE
 
 # Maximum amount of time to wait for the device to reboot
-monitorTimeout = ctx.changeControl.args.get("monitorTimeout")
+monitorTimeout = ctx.action.args.get("monitorTimeout")
 # As args are strings, we need to convert these to an int
 monitorTimeout = int(monitorTimeout) if monitorTimeout else 1200
 

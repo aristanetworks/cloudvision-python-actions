@@ -16,7 +16,7 @@ def string_to_list(string_to_convert):
 
 
 switch = ctx.getDevice()
-vlan_ids = ctx.changeControl.args['VLAN IDs']
+vlan_ids = ctx.action.args['VLAN IDs']
 
 if vlan_ids is not None:
     ctx.info(f"Supplied VLANs: {vlan_ids}")

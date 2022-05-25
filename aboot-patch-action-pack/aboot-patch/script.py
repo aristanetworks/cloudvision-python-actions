@@ -5,9 +5,9 @@
 from typing import List, Dict
 from cloudvision.cvlib import ActionFailed
 
-url = ctx.changeControl.args.get("extensionURL")
-extension = ctx.changeControl.args.get("extension")
-vrf = ctx.changeControl.args.get("vrf")
+url = ctx.action.args.get("extensionURL")
+extension = ctx.action.args.get("extension")
+vrf = ctx.action.args.get("vrf")
 
 cmdResponse = ctx.runDeviceCmds(["enable", "show hostname"])
 hostname = cmdResponse[1]['response']['hostname']

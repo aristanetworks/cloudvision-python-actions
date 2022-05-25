@@ -44,7 +44,7 @@ severity_filter = [
 ]
 
 # Extract the user-defined filter from user args, will be an empty string if unspecified
-severity_filter_str: str = ctx.changeControl.args.get("severity_filter")
+severity_filter_str: str = ctx.action.args.get("severity_filter")
 # Empty strings are falsy, so will only parse user input if it exists
 if severity_filter_str:
     # User arg is a comma seperated string, split on the comma
@@ -54,7 +54,7 @@ if severity_filter_str:
     severity_filter = [SEVERITIES[sev] for sev in severity_filter_list]
 
 # Repeat filter extraction for event types
-event_filter_str: str = ctx.changeControl.args.get("event_filter")
+event_filter_str: str = ctx.action.args.get("event_filter")
 if event_filter_str:
     event_filter_list = event_filter_str.split(',')
     # Filter (None) only filters false values. As an empty string is false, it removes
@@ -62,7 +62,7 @@ if event_filter_str:
     event_filter = list(filter(None, event_filter_list))
 
 # Repeat filter extraction for devices
-device_filter_str: str = ctx.changeControl.args.get("device_filter")
+device_filter_str: str = ctx.action.args.get("device_filter")
 if device_filter_str:
     device_filter_list = device_filter_str.split(',')
     # Filter (None) only filters false values. As an empty string is false, it removes
@@ -73,12 +73,12 @@ if device_filter_str:
 # but we can have events generated later which have a timestamp which was within the timeout window
 # if there is a raise timer configured.
 # These will not be caught if the raisetimer is longer than the timeout
-timeout = ctx.changeControl.args.get("duration")
+timeout = ctx.action.args.get("duration")
 # User timeout arg is a string, convert it to an integer. If not specified, default to 300
 timeout = int(timeout) if timeout else 300
 
 # Check to see if the fail_fast arg is "True", anything else is interpreted as False
-fail_fast: bool = ctx.changeControl.args.get("fail_fast") == "True"
+fail_fast: bool = ctx.action.args.get("fail_fast") == "True"
 
 # Create a stub to the event rAPI so we can send and receive requests and responses
 event_stub = ctx.getApiClient(EventServiceStub)

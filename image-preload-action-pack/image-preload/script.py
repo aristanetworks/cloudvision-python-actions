@@ -10,10 +10,10 @@ from urllib.parse import urljoin
 
 from cloudvision.cvlib import ActionFailed
 
-authority = ctx.changeControl.args.get("authority")
-path = ctx.changeControl.args.get("path")
-eos = ctx.changeControl.args.get("eos")
-vrf = ctx.changeControl.args.get("vrf")
+authority = ctx.action.args.get("authority")
+path = ctx.action.args.get("path")
+eos = ctx.action.args.get("eos")
+vrf = ctx.action.args.get("vrf")
 imageUrl = urljoin(f"https://{authority}", path + eos)
 
 ctx.info(f"Downloading EOS image from {imageUrl}")

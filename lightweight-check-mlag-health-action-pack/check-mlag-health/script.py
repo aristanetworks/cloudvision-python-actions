@@ -55,7 +55,7 @@ def isMlagUp():
 
 
 # Retrieve and parse the string arg
-duration = int(ctx.changeControl.args.get("checkDuration"))
+duration = int(ctx.action.args.get("checkDuration"))
 ctx.info(f"Checking MLAG Health for a maximum of {duration} seconds")
 
 # Keep checking mlag while there is still time remaining

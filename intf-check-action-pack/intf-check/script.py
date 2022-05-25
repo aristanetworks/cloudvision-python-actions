@@ -4,7 +4,7 @@
 
 from cloudvision.cvlib import ActionFailed
 
-interfacesStr: str = ctx.changeControl.args.get("interfaces")
+interfacesStr: str = ctx.action.args.get("interfaces")
 # Split the comma separated string on the comma and strip of any whitespace
 interfacesList = [intf.strip() for intf in interfacesStr.split(',')]
 # Filter out empty values from the split

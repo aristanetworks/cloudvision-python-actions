@@ -1,4 +1,4 @@
 type: PACKAGE
-version: 1.2.0
+version: 1.3.0
 name: page check Action package
 description: Action package containing a script to check if a web page is reachable from a number of devices

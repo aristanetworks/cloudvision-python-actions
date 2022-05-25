@@ -6,16 +6,16 @@ from time import sleep
 from cloudvision.Connector.grpc_client import GRPCClient, create_query
 from cloudvision.cvlib import ActionFailed
 
-path = ctx.changeControl.args.get("path").split("/")
-dataset = ctx.changeControl.args.get("dataset")
-key = ctx.changeControl.args.get("key")
-value = ctx.changeControl.args.get("value")
-attempts = ctx.changeControl.args.get("attempts")
+path = ctx.action.args.get("path").split("/")
+dataset = ctx.action.args.get("dataset")
+key = ctx.action.args.get("key")
+value = ctx.action.args.get("value")
+attempts = ctx.action.args.get("attempts")
 if attempts.isnumeric():
     attempts = int(attempts)
 else:
     raise ActionFailed("'attempts' arg must be a numeric value")
-interval = ctx.changeControl.args.get("interval")
+interval = ctx.action.args.get("interval")
 if interval.isnumeric():
     interval = int(interval)
 else:

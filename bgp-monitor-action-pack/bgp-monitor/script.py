@@ -36,15 +36,15 @@ def IsStatsDiffExpected(prevStats, currentStats, expectedDiff: int):
 
 # Count the vrf specific BGP peers rather than just the device's BGP peers
 # args are always in string format
-useVrfCounts = ctx.changeControl.args.get("vrfs") == "True"
-expectedStatsDiff = ctx.changeControl.args.get("expected_difference")
+useVrfCounts = ctx.action.args.get("vrfs") == "True"
+expectedStatsDiff = ctx.action.args.get("expected_difference")
 # If not set by the user, the arg will be the empty string, so we need to parse
 expectedStatsDiff = int(expectedStatsDiff) if expectedStatsDiff else 0
-checkWait = ctx.changeControl.args.get("check_wait")
+checkWait = ctx.action.args.get("check_wait")
 checkWait = int(checkWait) if checkWait else 60
 
 with ctx.getCvClient() as client:
-    ccStartTs = ctx.changeControl.getStartTime(client)
+    ccStartTs = ctx.action.getCCStartTime(client)
     if not ccStartTs:
         raise ActionFailed("No change control ID present")
     ccStart = Timestamp()

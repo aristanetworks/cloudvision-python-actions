@@ -7,13 +7,13 @@ from cloudvision.cvlib import ActionFailed
 import paramiko
 
 # Extract and ensure args are of the correct type
-pageUrl = ctx.changeControl.args.get("pageUrl")
-failLimit = int(ctx.changeControl.args.get("failCount"))
-timeout = int(ctx.changeControl.args.get("timeout"))
-username = ctx.changeControl.args.get("username")
-password = ctx.changeControl.args.get("password")
+pageUrl = ctx.action.args.get("pageUrl")
+failLimit = int(ctx.action.args.get("failCount"))
+timeout = int(ctx.action.args.get("timeout"))
+username = ctx.action.args.get("username")
+password = ctx.action.args.get("password")
 
-devicesStr: str = ctx.changeControl.args.get("deviceList")
+devicesStr: str = ctx.action.args.get("deviceList")
 deviceList = [dev.strip() for dev in devicesStr.split(',')]
 # split the comma seperated string and filter out empty values
 deviceList = list(filter(None, deviceList))

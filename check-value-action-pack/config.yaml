@@ -1,4 +1,4 @@
 type: PACKAGE
-version: 1.2.0
+version: 1.3.0
 name: check-path Action package
 description: Action package containing a script that checks a specified path and key for a specified value

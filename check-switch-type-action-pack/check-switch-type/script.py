@@ -4,7 +4,7 @@
 
 from cloudvision.cvlib import ActionFailed
 
-switchType = ctx.changeControl.args.get("switchType")
+switchType = ctx.action.args.get("switchType")
 
 ctx.info("Running show version from script to check switch type")
 cmds = [

@@ -25,7 +25,7 @@ ctx.info(f"Creating self-signed certificate for device with fqdn: {fqdn} - hostn
 
 
 # 2. Commands creation:
-args = ctx.changeControl.args
+args = ctx.action.args
 cmds = [
     "enable",
     f"security pki key generate rsa {args['key_length']} {args['key_file']}",

@@ -5,8 +5,8 @@
 from typing import List, Dict
 from cloudvision.cvlib import ActionFailed
 
-token = ctx.changeControl.args.get("token")
-filename = ctx.changeControl.args.get("filename")
+token = ctx.action.args.get("token")
+filename = ctx.action.args.get("filename")
 
 cmds = [
     "enable",
