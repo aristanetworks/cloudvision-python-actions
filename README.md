@@ -2,10 +2,15 @@
 
 ## **Note**: This is only available from CloudVision 2021.3.0 onwards
 
+## **Note**: Check out release branches (e.g. 2022.2) for scripts compatible with that CloudVision version
+
 ## Overview
 
-Here are a number of example Python3 scripts in action pack form to serve as reference to those designing their own user scripts.  
-These action packs are also able to be uploaded to a CloudVision cluster, where they can be used as needed, or duplicated and customised.  
+Here are a number of example Python3 scripts in action pack form to serve as reference to those designing their own user scripts.
+
+**Please note that scripts in the trunk branch may not be compatible with your installation of CloudVision. Please refer to the branch corresponding to your Cloudvision version for compatible scripts.**
+
+These action packs are also able to be uploaded to a CloudVision cluster, where they can be used as needed, or duplicated and customised.
 Those action packs listed in `bundled.yaml` are _bundled by default_ to CloudVision.
 
 ## How to Upload Action Packs to a CloudVision cluster
