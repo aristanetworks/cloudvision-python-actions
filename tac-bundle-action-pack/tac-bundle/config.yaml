@@ -1,6 +1,6 @@
 type: ACTION
 language: PYTHON_3
-name: TAC-Bundle
+name: TAC Bundle
 description: Gather log bundle from EOS switches for TAC troubleshooting
 file: script.py
 static-params: []
@@ -10,6 +10,6 @@ dynamic-params:
     required: true
     hidden: false
   - name: SRNumber
-    description: The TAC case number (if not specified '1337' will be used by default).
+    description: The TAC case number (if not specified no numbers will be used by default).
     required: false
     hidden: false
