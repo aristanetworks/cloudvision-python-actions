@@ -4,8 +4,6 @@
 dt = "$HOSTNAME-$(date +%Y_%m_%d.%H_%M_%S)"
 srn: str = ctx.action.args.get("SRNumber")
 
-if not srn:
-    srn = '1337'
 cmd = ["show version"]
 version = ctx.runDeviceCmds(cmd)[0]['response']['version']
 ctx.info(str(version))
@@ -13,7 +11,10 @@ vl = version.split('.')
 
 # If EOS is higher than 4.26.1F+ we can run the new support-bundle command
 if int(vl[1]) >= 26 and int(vl[2].strip("FM")) >= 1:
-    baseline = [f"send support-bundle flash: case-number {srn}"]
+    if not srn:
+        baseline = ["send support-bundle flash:"]
+    else:
+        baseline = [f"send support-bundle flash: case-number {srn}"]
 # Otherwise collect each logs individually
 else:
     baseline = [
