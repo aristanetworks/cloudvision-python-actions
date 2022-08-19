@@ -7,5 +7,4 @@ bundled-action-packs:
     ./bgp-monitor-action-pack,
     ./event-monitor-action-pack,
     ./sleep-action-pack,
-    ./tac-bundle-action-pack,
   ]
