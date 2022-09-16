@@ -1,4 +1,5 @@
 type: ACTION
+action-type: CHANGECONTROL_CUSTOM
 language: PYTHON_3
 name: Ping Host Addresses on VLAN
 description: Forces a device reload, and uses the devices's CVP streaming status to verify that it succeeded to reconnect and stream to CVP
@@ -13,4 +14,4 @@ dynamic-params:
     description: Enter the VLAN IDs whose subnet you wish to ping all host addresses on (Multiple VLAN IDs should be separated by commas)
     required: true
     hidden: false
-    default: "" 
+    default: ""

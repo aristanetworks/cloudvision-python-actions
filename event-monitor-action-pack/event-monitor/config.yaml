@@ -1,4 +1,5 @@
 type: ACTION
+action-type: CHANGECONTROL_CUSTOM
 language: PYTHON_3
 name: Monitor Events
 description: Monitors CloudVision to ensure no new events happen post Change Control

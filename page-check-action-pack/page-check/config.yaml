@@ -1,4 +1,5 @@
 type: ACTION
+action-type: CHANGECONTROL_CUSTOM
 language: PYTHON_3
 name: Device to Web Page Connectivity check
 description: Checks if a web page is reachable from a number of client devices

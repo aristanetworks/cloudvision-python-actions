@@ -1,4 +1,5 @@
 type: ACTION
+action-type: CHANGECONTROL_CUSTOM
 language: PYTHON_3
 name: Aboot Patch
 description: Downloads and installs the specified Aboot patch for Field Notice 044. The image can be downloaded from any server using https. If using CVP as source for the patch file, it requires that CVP has an image bundle containing that Aboot patch file in it

@@ -1,4 +1,5 @@
 type: ACTION
+action-type: CHANGECONTROL_CUSTOM
 language: PYTHON_3
 name: Check Interface Status
 description: Checks the statuses of the provided interfaces and fails if any are down

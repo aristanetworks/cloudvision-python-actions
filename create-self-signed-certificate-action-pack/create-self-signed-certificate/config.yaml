@@ -1,4 +1,5 @@
 type: ACTION
+action-type: CHANGECONTROL_CUSTOM
 language: PYTHON_3
 name: Self-signed certificate/key creation
 description: This action will generate a self-signed certificate and an associate key on the devices that can be used in an SSL profile.

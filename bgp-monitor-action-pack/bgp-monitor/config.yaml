@@ -1,4 +1,5 @@
 type: ACTION
+action-type: CHANGECONTROL_CUSTOM
 language: PYTHON_3
 name: Monitor BGP stats
 description: Monitors CloudVision to ensure the number of BGP peers pre and post Change Control are the same, and will fail if they are different

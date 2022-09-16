@@ -1,4 +1,5 @@
 type: ACTION
+action-type: CHANGECONTROL_CUSTOM
 language: PYTHON_3
 name: Lightweight Exit BGP Maintenance Mode
 description: Script that makes a device exit from BGP maintenance mode without running additional tests (such as tracking traffic volumes) to ensure the action succeeded

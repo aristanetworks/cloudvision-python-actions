@@ -1,4 +1,5 @@
 type: ACTION
+action-type: CHANGECONTROL_CUSTOM
 language: PYTHON_3
 name: Check Path
 description: Checks the path and key specified and continues if the specified value is present, or if the key is present if the value is left blank, and will continue looking for the value up to a specified maximum number of attempts

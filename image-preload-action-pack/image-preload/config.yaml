@@ -1,6 +1,7 @@
 # Note: This script will become obsolete once the image studio system
 # becomes available, after which this only serves as an example of script writing
 type: ACTION
+action-type: CHANGECONTROL_CUSTOM
 language: PYTHON_3
 name: Image Preload
 description: Downloads a specified EOS SWI onto a vrf

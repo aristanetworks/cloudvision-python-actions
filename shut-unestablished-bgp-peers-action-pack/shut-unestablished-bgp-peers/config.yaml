@@ -1,4 +1,5 @@
 type: ACTION
+action-type: CHANGECONTROL_CUSTOM
 language: PYTHON_3
 name: Shut Unestablished BGP Peers
 description: Shuts down any BGP Unestablished Peers so that Exiting BGP maintenance mode will not fail post image upgrade
