@@ -26,12 +26,12 @@ deviceID = ctx.getDevice().id
 ctx.info(f"Reloading device {deviceID}")
 cmds = [
     'enable',
-    'reload all in 00:01 force reason "Reload triggered by CloudVision Action"',
+    'reload now',
 ]
-ctx.runDeviceCmds(cmds)
-ctx.info(f"Device {deviceID} reload scheduled in 1 minute, waiting for relaod to start")
-# Wait for the reload to start before checking whether device has reloaded
-sleep(60)
+# As the device reboot commands causes the device to reboot, the command response
+# contains heartbeat errors as the device is no longer online. We explicitly do not expect
+# a response here so that no exceptions are raised due to the presence of these errors
+ctx.runDeviceCmds(cmds, validateResponse=False)
 ctx.info(f"Device {deviceID} was reloaded, monitoring streaming status to come back up")
 
 # Create a filter to only receive updates for the device we want from the resource API
