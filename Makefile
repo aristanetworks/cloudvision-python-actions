@@ -10,6 +10,13 @@ lint:
 
 # Packages up all actionpacks in the repo
 actionpacks:
-	mkdir gen
+	mkdir -p gen
 	find . -mindepth 1 -maxdepth 1 -name "*action-pack" -type d -execdir tar cf {}.tar {} \;
+	mv *.tar gen
+
+# Use this option for OS X systems. It includes the `--disable-copyfile` flag which stops copyfiles
+# being added to the tar file. If these are in the tar file the actions endpoint rejects the pack
+actionpacks-mac:
+	mkdir -p gen
+	find . -mindepth 1 -maxdepth 1 -name "*action-pack" -type d -execdir tar --disable-copyfile -cf {}.tar {} \;
 	mv *.tar gen
