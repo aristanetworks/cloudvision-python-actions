@@ -64,7 +64,7 @@ while duration:
     # If mlag is not up, log it's current status
     ctx.alog(status)
     # Calculate how long before next check, and ensure that we don't go over the timeout
-    sleepTime = max(pollInterval, duration)
+    sleepTime = min(pollInterval, duration)
     time.sleep(sleepTime)
     # Update the remaining time
     duration -= sleepTime
