@@ -1,0 +1,46 @@
+type: ACTION
+action-type: CHANGECONTROL_CUSTOM
+language: PYTHON_3
+name: Connectivity Monitor
+description: Monitor changes in Connectivity Monitor metrics post Change Control to detect changes versus historical values
+file: script.py
+static-params: []
+dynamic-params:
+  - name: monitorTimeout
+    description: Maximum time (in seconds) to monitor device connectivity monitor statistics
+    required: true
+    hidden: false
+    default: "300"
+  - name: DeviceID
+    description: The Device serial number on which the Connectivity Monitor metrics are to be checked
+    required: true
+    hidden: false
+  - name: host
+    description: Host of the connectivity monitor probe
+    required: true
+    hidden: false
+  - name: vrf
+    description: vrf of the connectivity monitor probe
+    required: false
+    hidden: false
+    default: "default"
+  - name: source_intf
+    description: source interface of the connectivity monitor probe
+    required: false
+    hidden: false
+    default: "default"
+  - name: stat
+    description: stat can be either 'latency', 'http_response', 'jitter', or 'packet_loss'
+    required: true
+    hidden: false
+    default: "latency"
+  - name: critical_level
+    description: Critical level parameter used to adjust the sensitivity of change detection
+    required: true
+    hidden: false
+    default: "3"
+  - name: anomaly_score_threshold
+    description: Anomaly score threshold value that will cause the action to fail if, compared to historical statistics, the cusum value for the given stat deviates more than
+    required: true
+    hidden: false
+    default: "100"
