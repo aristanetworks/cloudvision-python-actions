@@ -2,7 +2,7 @@ type: ACTION
 action-type: CHANGECONTROL_CUSTOM
 language: PYTHON_3
 name: Monitor BGP stats
-description: Monitors CloudVision to ensure the number of BGP peers pre and post Change Control are the same, and will fail if they are different
+description: Monitors CloudVision to ensure the cumulative number of BGP peers pre- and post-Change Control are the same for a device, and will fail if they are different. Shutting peers does not impact this count.
 file: script.py
 static-params: []
 dynamic-params:
@@ -11,17 +11,17 @@ dynamic-params:
     required: true
     hidden: false
   - name: vrfs
-    description: True/False flag to also monitor vrf BGP peers rather than just the device's BGP peers. Defaults to False
+    description: True/False flag to also monitor vrf BGP peers rather than just the device's BGP peers. Defaults to False.
     required: false
     hidden: false
     default: "False"
   - name: expected_difference
-    description: The expected difference between pre CC peers and current peers for the device. Positive numbers allow for adding peers, negative for retiring peers. Defaults to 0 (No difference allowed)
+    description: The expected cumulative difference of BGP peers pre- and post-Change Control for the device. Positive numbers allow for adding peers, negative for retiring peers. Defaults to 0 (No difference allowed). Shutting a peer does not affect this count, as it moves to "Idle".
     required: false
     hidden: false
     default: "0"
   - name: check_wait
-    description: Time to wait before checking the device's number of current peers to allow them to settle. Defaults to 60 seconds
+    description: Time to wait before checking the device's number of current peers to allow them to settle. Defaults to 60 seconds.
     required: false
     hidden: false
     default: "60"

@@ -1,0 +1,51 @@
+type: ACTION
+action-type: CHANGECONTROL_CUSTOM
+language: PYTHON_3
+name: Monitor specific BGP peer statistics fields
+description: Monitors CloudVision to ensure per type BGP peer count statistics pre- and post-Change Control change by fixed amounts. Omitting a difference argument causes changes for that field to be ignored.
+file: script.py
+static-params: []
+dynamic-params:
+  - name: DeviceID
+    description: The device whose BGP stats will be monitored.
+    required: true
+    hidden: false
+  - name: vrfs
+    description: True/False flag to also monitor BGP peers in non default vrfs. Defaults to False. Setting this causes the expected_difference* arguments to be the cumulative change to both default and vrf peer changes.
+    required: false
+    hidden: false
+    default: "False"
+  - name: expected_difference_active
+    description: The expected difference between active peers, pre-CC and currently for the device. Positive numbers allow for adding peers, negative for retiring peers. Omitting the argument causes the check to skip this field.
+    required: false
+    hidden: false
+  - name: expected_difference_connect
+    description: The expected difference between connect peers, pre-CC and currently for the device. Positive numbers allow for adding peers, negative for retiring peers. Omitting the argument causes the check to skip this field.
+    required: false
+    hidden: false
+  - name: expected_difference_established
+    description: The expected difference between established peers, pre-CC and currently for the device. Positive numbers allow for adding peers, negative for retiring peers. Omitting the argument causes the check to skip this field.
+    required: false
+    hidden: false
+    default: "0" # Base case usage so that the script will have some value set normally
+  - name: expected_difference_idle
+    description: The expected difference between idle peers, pre-CC and currently for the device. Positive numbers allow for adding peers, negative for retiring peers. Omitting the argument causes the check to skip this field.
+    required: false
+    hidden: false
+  - name: expected_difference_open_confirm
+    description: The expected difference between open-confirm peers, pre-CC and currently for the device. Positive numbers allow for adding peers, negative for retiring peers. Omitting the argument causes the check to skip this field.
+    required: false
+    hidden: false
+  - name: expected_difference_open_sent
+    description: The expected difference between open-sent peers, pre-CC and currently for the device. Positive numbers allow for adding peers, negative for retiring peers. Omitting the argument causes the check to skip this field.
+    required: false
+    hidden: false
+  - name: expected_difference_unknown
+    description: The expected difference between unknown peers, pre-CC and currently for the device. Positive numbers allow for adding peers, negative for retiring peers. Omitting the argument causes the check to skip this field.
+    required: false
+    hidden: false
+  - name: check_wait
+    description: Time to wait before checking the device's number of current peers to allow them to settle. Defaults to 60 seconds.
+    required: false
+    hidden: false
+    default: "60"
