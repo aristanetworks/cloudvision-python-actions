@@ -2,11 +2,7 @@
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the COPYING file.
 
-# This script just saves the running config of a device
-
-# Why?
-# If the running config were to change due to patch but this was still compliant with the 
-# designed config, CVP will not notice a change and the config will need saving.
+# This script just saves the running config of a device and acts as an example for running other commands.
 
 from typing import List, Dict
 from cloudvision.cvlib import ActionFailed
