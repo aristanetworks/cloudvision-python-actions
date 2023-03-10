@@ -85,19 +85,23 @@ for resp in stub.GetAll(get_range, timeout=timeout):
     match stat:
         case "latency":
             if (math.isnan(device_stats.latency_millis.value)):
-                raise ActionFailed("Missing attributes from response")
+                ctx.warning("Missing attributes from response, dropping data point")
+                continue
             baseline_stats.append(device_stats.latency_millis.value)
         case "jitter":
             if (math.isnan(device_stats.jitter_millis.value)):
-                raise ActionFailed("Missing attributes from response")
+                ctx.warning("Missing attributes from response, dropping data point")
+                continue
             baseline_stats.append(device_stats.jitter_millis.value)
         case "http_response":
             if (math.isnan(device_stats.http_response_time_millis.value)):
-                raise ActionFailed("Missing attributes from response")
+                ctx.warning("Missing attributes from response, dropping data point")
+                continue
             baseline_stats.append(device_stats.http_response_time_millis.value)
         case "packet_loss":
             if (math.isnan(device_stats.packet_loss_percent.value)):
-                raise ActionFailed("Missing attributes from response")
+                ctx.warning("Missing attributes from response, dropping data point")
+                continue
             baseline_stats.append(device_stats.packet_loss_percent.value)
 
 baseline_stats_mean = statistics.mean(baseline_stats)
