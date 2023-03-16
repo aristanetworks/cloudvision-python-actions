@@ -79,36 +79,37 @@ get_range.partial_eq_filter.append(connectivity_filter)
 
 baseline_stats = []
 
+baseline_value = 0
+
 for resp in stub.GetAll(get_range, timeout=timeout):
     device_stats = resp.value
 
     match stat:
         case "latency":
-            if (math.isnan(device_stats.latency_millis.value)):
-                ctx.warning("Missing attributes from response, dropping data point")
-                continue
-            baseline_stats.append(device_stats.latency_millis.value)
+            baseline_value = device_stats.latency_millis.value
         case "jitter":
-            if (math.isnan(device_stats.jitter_millis.value)):
-                ctx.warning("Missing attributes from response, dropping data point")
-                continue
-            baseline_stats.append(device_stats.jitter_millis.value)
+            baseline_value = device_stats.jitter_millis.value
         case "http_response":
-            if (math.isnan(device_stats.http_response_time_millis.value)):
-                ctx.warning("Missing attributes from response, dropping data point")
-                continue
-            baseline_stats.append(device_stats.http_response_time_millis.value)
+            baseline_value = device_stats.http_response_time_millis.value
         case "packet_loss":
-            if (math.isnan(device_stats.packet_loss_percent.value)):
-                ctx.warning("Missing attributes from response, dropping data point")
-                continue
-            baseline_stats.append(device_stats.packet_loss_percent.value)
+            baseline_value = device_stats.packet_loss_percent.value
+
+    if math.isnan(baseline_value):
+        ctx.warning("Connectivity Monitor stat NaN, dropping data point")
+        continue
+
+    baseline_stats.append(baseline_value)
+
+if len(baseline_stats) == 0:
+    raise ActionFailed(f"No valid data received for the probe ({probeKey})")
 
 baseline_stats_mean = statistics.mean(baseline_stats)
 
 baseline_stats_sd = statistics.stdev(baseline_stats)
 
 updates_received = False
+
+valid_stats = True
 
 
 def monitor():
@@ -122,6 +123,7 @@ def monitor():
     latest_stat = 0
 
     global updates_received
+    global valid_stats
 
     for resp in stub.Subscribe(subscribe, timeout=timeout):
         # Discard anything that is not the initial and update phase of subscribe
@@ -142,6 +144,14 @@ def monitor():
                 latest_stat = device_stats.http_response_time_millis.value
             case "packet_loss":
                 latest_stat = device_stats.packet_loss_percent.value
+
+        if math.isnan(latest_stat):
+            ctx.warning("Connectivity Monitor stat NaN, dropping data point")
+            # Set valid_stats to false so action will fail if last data point is NaN
+            valid_stats = False
+            continue
+        else:
+            valid_stats = True
 
         # when there is no deviation in baseline stats, any value greater than 0 is infinite deviation
         if baseline_stats_sd == 0 and latest_stat > 0:
@@ -169,3 +179,7 @@ except TimeoutExpiry:
     # On timeout expiry, if no stat changes have occurred, fail the action
     if not updates_received:
         raise ActionFailed(f"No updates received from probe ({probeKey})")
+    # If the last data point is NaN, fail the action
+    if not valid_stats:
+        raise ActionFailed(f"Invalid stats received for probe ({probeKey}),"
+                           f" it is possible that the probe is currently down")
