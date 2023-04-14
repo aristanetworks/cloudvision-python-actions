@@ -41,6 +41,9 @@ if not(device_id and host and anomaly_score_threshold and critical_level and sta
 if not(stat == "latency" or stat == "jitter" or stat == "http_response" or stat == "packet_loss"):
     raise ActionFailed("Invalid statistic name given")
 
+if timeout < 1 or anomaly_score_threshold < 0 or critical_level < 0:
+    raise ActionFailed("'timeout', 'anomaly_score_threshold', 'critical_level' must all have positive values")
+
 probeKey = f"Device = {device_id}, Host = {host}, VRF = {vrf}, Source interface = {source_intf}"
 
 ctx.info(f"Monitoring the Connectivity Monitor probe ({probeKey}) for anomalies in {stat} for {timeout} seconds")
