@@ -161,6 +161,9 @@ def monitor():
             raise ActionFailed(f"Connectivity monitor probe '{probeKey}' detected anomaly"
                                f" for {stat} statistic")
 
+        elif baseline_stats_sd == 0 and latest_stat == 0:
+            continue
+
         else:
             normalised_stat = (latest_stat - baseline_stats_mean) / baseline_stats_sd
 
