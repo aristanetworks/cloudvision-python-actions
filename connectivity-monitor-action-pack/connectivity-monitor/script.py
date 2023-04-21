@@ -157,12 +157,11 @@ def monitor():
             valid_stats = True
 
         # when there is no deviation in baseline stats, any value greater than 0 is infinite deviation
-        if baseline_stats_sd == 0 and latest_stat > 0:
+        if baseline_stats_sd == 0:
+            if latest_stat == 0:
+                continue
             raise ActionFailed(f"Connectivity monitor probe '{probeKey}' detected anomaly"
                                f" for {stat} statistic")
-
-        elif baseline_stats_sd == 0 and latest_stat == 0:
-            continue
 
         else:
             normalised_stat = (latest_stat - baseline_stats_mean) / baseline_stats_sd
