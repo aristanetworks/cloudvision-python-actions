@@ -2,12 +2,12 @@ type: ACTION
 action-type: CHANGECONTROL_CUSTOM
 language: PYTHON_3
 name: Connectivity Monitor
-description: Monitor changes in Connectivity Monitor metrics post Change Control to detect changes versus historical values
+description: Monitor changes in Connectivity Monitor metrics post Change Control to detect changes versus historical values using a CUSUM statistical approach
 file: script.py
 static-params: []
 dynamic-params:
   - name: monitorTimeout
-    description: Maximum time (in seconds) to monitor device connectivity monitor statistics
+    description: Maximum time duration (in seconds) to monitor device connectivity monitor statistics
     required: true
     hidden: false
     default: "300"
@@ -30,17 +30,17 @@ dynamic-params:
     hidden: false
     default: "default"
   - name: stat
-    description: stat can be either 'latency', 'http_response', 'jitter', or 'packet_loss'
+    description: The connectivity monitor statistic to monitor. Can be either 'latency', 'http_response', 'jitter', or 'packet_loss'
     required: true
     hidden: false
     default: "latency"
   - name: critical_level
-    description: Critical level parameter used to adjust the sensitivity of change detection
+    description: Critical level parameter used to adjust the sensitivity of change detection. Higher critical level means it is less susceptible to failure
     required: true
     hidden: false
     default: "3"
   - name: anomaly_score_threshold
-    description: Anomaly score threshold value that will cause the action to fail if, compared to historical statistics, the cusum value for the given stat deviates more than
+    description: Anomaly score threshold value that will cause the action to fail if, compared to historical statistics, the cusum value for the given stat deviates more than. A higher threshold value will be less susceptible to failure
     required: true
     hidden: false
     default: "100"
