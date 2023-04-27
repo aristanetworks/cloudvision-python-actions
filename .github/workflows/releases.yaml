@@ -1,0 +1,29 @@
+---
+name: "tagged-release"
+
+on:
+  push:
+    tags:
+      - "20*.*.*"
+
+jobs:
+  tagged-release:
+    name: "Tagged Release"
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Checkout source code"
+        uses: "actions/checkout@v3.5.2"
+
+      - name: "Build artifacts"
+        run: |
+          make dist
+
+      - name: "Release"
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          draft: true
+          prerelease: false #TODO: Toggle to false once workflow is validated
+          files: |
+            gen/*
