@@ -4,7 +4,7 @@ name: "tagged-release"
 on:
   push:
     tags:
-      - "20*.*.*"
+      - "20**.*.*"
 
 jobs:
   tagged-release:
