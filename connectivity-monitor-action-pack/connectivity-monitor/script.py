@@ -27,21 +27,25 @@ stub = ctx.getApiClient(ProbeStatsServiceStub)
 monitorTimeout = ctx.action.args.get("monitorTimeout")
 timeout = int(monitorTimeout) if monitorTimeout else 300
 
+anomaly_score_threshold = ctx.action.args.get("anomaly_score_threshold")
+anomaly_threshold = int(anomaly_score_threshold) if anomaly_score_threshold else 100
+
+critical_level = ctx.action.args.get("critical_level")
+critical_lvl = int(critical_level) if critical_level else 3
+
 device_id = ctx.action.args.get("DeviceID")
 host = ctx.action.args.get("host")
 vrf = ctx.action.args.get("vrf")
 source_intf = ctx.action.args.get("source_intf")
 stat = ctx.action.args.get("stat").casefold()
-anomaly_score_threshold = int(ctx.action.args.get("anomaly_score_threshold"))
-critical_level = int(ctx.action.args.get("critical_level"))
 
-if not(device_id and host and anomaly_score_threshold and critical_level and stat):
+if not(device_id and host and stat):
     raise ActionFailed("Required arguments not found")
 
 if not(stat == "latency" or stat == "jitter" or stat == "http_response" or stat == "packet_loss"):
     raise ActionFailed("Invalid statistic name given")
 
-if timeout < 1 or anomaly_score_threshold < 0 or critical_level < 0:
+if timeout < 1 or anomaly_threshold < 0 or critical_lvl < 0:
     raise ActionFailed("'timeout', 'anomaly_score_threshold', 'critical_level' must all have positive values")
 
 probeKey = f"Device = {device_id}, Host = {host}, VRF = {vrf}, Source interface = {source_intf}"
@@ -167,11 +171,11 @@ def monitor():
             normalised_stat = (latest_stat - baseline_stats_mean) / baseline_stats_sd
 
             # calculate the upper and lower CUSUM values
-            cusum_hi = max(0, cusum_hi + normalised_stat - critical_level)
-            cusum_lo = min(0, cusum_lo + normalised_stat + critical_level)
+            cusum_hi = max(0, cusum_hi + normalised_stat - critical_lvl)
+            cusum_lo = min(0, cusum_lo + normalised_stat + critical_lvl)
 
             # fail the action if any of the CUSUM values exceed the threshold value
-            if(cusum_hi > anomaly_score_threshold or abs(cusum_lo) > anomaly_score_threshold):
+            if(cusum_hi > anomaly_threshold or abs(cusum_lo) > anomaly_threshold):
                 raise ActionFailed(f"Connectivity monitor probe '{probeKey}' detected anomaly"
                                    f" for {stat} statistic for a prolonged period of time")
 
