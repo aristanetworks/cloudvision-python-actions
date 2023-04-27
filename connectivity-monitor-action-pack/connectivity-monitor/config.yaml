@@ -44,3 +44,8 @@ dynamic-params:
     required: true
     hidden: false
     default: "100"
+  - name: historical_get_duration
+    description: Time duration (in seconds) to gather historical data for the given stat
+    required: true
+    hidden: false
+    default: "3600"

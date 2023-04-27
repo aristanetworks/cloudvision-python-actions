@@ -20,7 +20,7 @@ from arista.connectivitymonitor.v1 import models
 from arista.subscriptions.subscriptions_pb2 import Operation
 
 
-ONE_HOUR_NS = 3600000000000
+ONE_SECOND_NS = 1000000000
 
 stub = ctx.getApiClient(ProbeStatsServiceStub)
 
@@ -32,6 +32,9 @@ anomaly_threshold = int(anomaly_score_threshold) if anomaly_score_threshold else
 
 critical_level = ctx.action.args.get("critical_level")
 critical_lvl = int(critical_level) if critical_level else 3
+
+historical_get_duration = ctx.action.args.get("historical_get_duration")
+get_duration = int(historical_get_duration) if historical_get_duration else 3600
 
 device_id = ctx.action.args.get("DeviceID")
 host = ctx.action.args.get("host")
@@ -45,8 +48,12 @@ if not(device_id and host and stat):
 if not(stat == "latency" or stat == "jitter" or stat == "http_response" or stat == "packet_loss"):
     raise ActionFailed("Invalid statistic name given")
 
-if timeout < 1 or anomaly_threshold < 0 or critical_lvl < 0:
-    raise ActionFailed("'timeout', 'anomaly_score_threshold', 'critical_level' must all have positive values")
+if timeout < 1 or anomaly_threshold < 0 or critical_lvl < 0 or get_duration < 0:
+    raise ActionFailed(("'timeout', 'anomaly_score_threshold', 'critical_level',"
+                       " 'historical_get_duration' must all have positive values"))
+
+# convert historical get duration to nanoseconds as the get time range only accepts nanosecond timestamps
+get_duration_ns = get_duration * ONE_SECOND_NS
 
 probeKey = f"Device = {device_id}, Host = {host}, VRF = {vrf}, Source interface = {source_intf}"
 
@@ -70,7 +77,7 @@ connectivity_filter = models.ProbeStats(
     key=key
 )
 
-prev_hr = int(ccStartTs) - ONE_HOUR_NS
+prev_hr = int(ccStartTs) - get_duration_ns
 
 get = ProbeStatsRequest(
     key=key,
