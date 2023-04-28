@@ -22,7 +22,7 @@ jobs:
         uses: softprops/action-gh-release@v0.1.15
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
-          body: "${{ GITHUB_REF_NAME }} compatible action packages"
+          body: "${{ env.GITHUB_REF_NAME }} compatible action packages"
           draft: true #TODO: Toggle to false once workflow is validated
           prerelease: false
           generate_release_notes: false
