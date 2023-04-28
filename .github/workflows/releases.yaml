@@ -13,17 +13,16 @@ jobs:
 
     steps:
       - name: "Checkout source code"
-        uses: "actions/checkout@v3.5.2"
+        uses: "actions/checkout@v3"
 
       - name: "Build artifacts"
-        run: |
-          make dist
+        run: make dist
 
       - name: "Release"
-        uses: "marvinpinto/action-automatic-releases@latest"
+        uses: softprops/action-gh-release@v0.1.15
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          draft: true
-          prerelease: false #TODO: Toggle to false once workflow is validated
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          draft: true #TODO: Toggle to false once workflow is validated
+          prerelease: false
           files: |
             gen/*
