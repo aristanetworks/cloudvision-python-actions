@@ -95,6 +95,8 @@ baseline_stats = []
 
 baseline_value = 0
 
+nan_count = 0
+
 for resp in stub.GetAll(get_range, timeout=timeout):
     device_stats = resp.value
 
@@ -109,10 +111,13 @@ for resp in stub.GetAll(get_range, timeout=timeout):
             baseline_value = device_stats.packet_loss_percent.value
 
     if math.isnan(baseline_value):
-        ctx.warning("Connectivity Monitor stat NaN, dropping data point")
+        nan_count = nan_count + 1
         continue
 
     baseline_stats.append(baseline_value)
+
+if nan_count > 0:
+    ctx.warning(f"Received NaN {nan_count} times from historical data")
 
 if len(baseline_stats) == 0:
     raise ActionFailed(f"No valid data received for the probe ({probeKey})")
@@ -124,6 +129,9 @@ baseline_stats_sd = statistics.stdev(baseline_stats)
 updates_received = False
 
 valid_stats = True
+
+ctx.debug(f"Baseline {stat} mean: {baseline_stats_mean}, baseline {stat} sd: {baseline_stats_sd},"
+          f" anomaly score theshold: {anomaly_threshold}, critical level: {critical_lvl}")
 
 
 def monitor():
@@ -160,7 +168,6 @@ def monitor():
                 latest_stat = device_stats.packet_loss_percent.value
 
         if math.isnan(latest_stat):
-            ctx.warning("Connectivity Monitor stat NaN, dropping data point")
             # Set valid_stats to false so action will fail if last data point is NaN
             valid_stats = False
             continue
@@ -175,11 +182,18 @@ def monitor():
                                f" for {stat} statistic")
 
         else:
+            """
+            We use a statistical approach here known as CUSUM to detect anomalies,
+            more information can be found here: https://en.wikipedia.org/wiki/CUSUM
+            """
             normalised_stat = (latest_stat - baseline_stats_mean) / baseline_stats_sd
 
             # calculate the upper and lower CUSUM values
             cusum_hi = max(0, cusum_hi + normalised_stat - critical_lvl)
             cusum_lo = min(0, cusum_lo + normalised_stat + critical_lvl)
+
+            ctx.debug(f"{stat} value: {latest_stat}, normalised value: {normalised_stat},"
+                      f" cusum_hi: {cusum_hi}, cusum_lo: {cusum_lo}")
 
             # fail the action if any of the CUSUM values exceed the threshold value
             if(cusum_hi > anomaly_threshold or abs(cusum_lo) > anomaly_threshold):
