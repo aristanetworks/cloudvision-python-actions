@@ -182,10 +182,8 @@ def monitor():
                                f" for {stat} statistic")
 
         else:
-            """
-            We use a statistical approach here known as CUSUM to detect anomalies,
-            more information can be found here: https://en.wikipedia.org/wiki/CUSUM
-            """
+            # We use a statistical approach here known as CUSUM to detect anomalies,
+            # more information can be found here: https://en.wikipedia.org/wiki/CUSUM
             normalised_stat = (latest_stat - baseline_stats_mean) / baseline_stats_sd
 
             # calculate the upper and lower CUSUM values
