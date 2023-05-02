@@ -119,7 +119,7 @@ for resp in stub.GetAll(get_range, timeout=timeout):
 if nan_count > 0:
     ctx.warning(f"Received NaN {nan_count} times from historical data")
 
-if len(baseline_stats) == 0:
+if len(baseline_stats) < 2:
     raise ActionFailed(f"No valid data received for the probe ({probeKey})")
 
 baseline_stats_mean = statistics.mean(baseline_stats)

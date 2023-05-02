@@ -1,4 +1,4 @@
 type: PACKAGE
-version: 1.0.7
+version: 1.0.8
 name: connectivity-monitor Action package
 description: Action package containing a script that checks to ensure that Connectivity Monitor Statistics stay within a specified limit
