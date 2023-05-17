@@ -55,9 +55,9 @@ if timeout < 1 or anomaly_threshold < 0 or critical_lvl < 0 or get_duration < 0:
 # convert historical get duration to nanoseconds as the get time range only accepts nanosecond timestamps
 get_duration_ns = get_duration * ONE_SECOND_NS
 
-probeKey = f"Device = {device_id}, Host = {host}, VRF = {vrf}, Source interface = {source_intf}"
+probeStatsKey = f"Device = {device_id}, Host = {host}, VRF = {vrf}, Source interface = {source_intf}"
 
-ctx.info(f"Monitoring the Connectivity Monitor probe ({probeKey}) for anomalies in {stat} for {timeout} seconds")
+ctx.info(f"Monitoring the Connectivity Monitor probe ({probeStatsKey}) for anomalies in {stat} for {timeout} seconds")
 
 with ctx.getCvClient() as client:
     ccStartTs = ctx.action.getCCStartTime(client)
@@ -66,7 +66,7 @@ with ctx.getCvClient() as client:
     ccStart = Timestamp()
     ccStart.FromNanoseconds(int(ccStartTs))
 
-key = models.ProbeKey(
+key = models.ProbeStatsKey(
     device_id=wrapperpb.StringValue(value=device_id),
     host=wrapperpb.StringValue(value=host),
     vrf=wrapperpb.StringValue(value=vrf),
@@ -120,7 +120,7 @@ if nan_count > 0:
     ctx.warning(f"Received NaN {nan_count} times from historical data")
 
 if len(baseline_stats) < 2:
-    raise ActionFailed(f"No valid data received for the probe ({probeKey})")
+    raise ActionFailed(f"No valid data received for the probe ({probeStatsKey})")
 
 baseline_stats_mean = statistics.mean(baseline_stats)
 
@@ -178,7 +178,7 @@ def monitor():
         if baseline_stats_sd == 0:
             if latest_stat == 0:
                 continue
-            raise ActionFailed(f"Connectivity monitor probe '{probeKey}' detected anomaly"
+            raise ActionFailed(f"Connectivity monitor probe '{probeStatsKey}' detected anomaly"
                                f" for {stat} statistic")
 
         else:
@@ -195,7 +195,7 @@ def monitor():
 
             # fail the action if any of the CUSUM values exceed the threshold value
             if(cusum_hi > anomaly_threshold or abs(cusum_lo) > anomaly_threshold):
-                raise ActionFailed(f"Connectivity monitor probe '{probeKey}' detected anomaly"
+                raise ActionFailed(f"Connectivity monitor probe '{probeStatsKey}' detected anomaly"
                                    f" for {stat} statistic for a prolonged period of time")
 
 
@@ -206,8 +206,8 @@ try:
 except TimeoutExpiry:
     # On timeout expiry, if no stat changes have occurred, fail the action
     if not updates_received:
-        raise ActionFailed(f"No updates received from probe ({probeKey})")
+        raise ActionFailed(f"No updates received from probe ({probeStatsKey})")
     # If the last data point is NaN, fail the action
     if not valid_stats:
-        raise ActionFailed(f"Invalid stats received for probe ({probeKey}),"
+        raise ActionFailed(f"Invalid stats received for probe ({probeStatsKey}),"
                            f" it is possible that the probe is currently down")
