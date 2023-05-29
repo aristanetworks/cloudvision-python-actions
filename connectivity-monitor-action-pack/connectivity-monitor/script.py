@@ -40,12 +40,15 @@ device_id = ctx.action.args.get("DeviceID")
 host = ctx.action.args.get("host")
 vrf = ctx.action.args.get("vrf")
 source_intf = ctx.action.args.get("source_intf")
-stat = ctx.action.args.get("stat").casefold()
+stat = ctx.action.args.get("stat")
 
 if not(device_id and host and stat):
     raise ActionFailed("Required arguments not found")
 
-if not(stat == "latency" or stat == "jitter" or stat == "http_response" or stat == "packet_loss"):
+host = host.strip()
+stat = stat.casefold().strip()
+
+if stat not in ["latency", "jitter", "http_response", "packet_loss"]:
     raise ActionFailed("Invalid statistic name given")
 
 if timeout < 1 or anomaly_threshold < 0 or critical_lvl < 0 or get_duration < 0:
