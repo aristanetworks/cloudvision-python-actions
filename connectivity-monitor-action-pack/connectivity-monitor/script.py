@@ -123,7 +123,8 @@ if nan_count > 0:
     ctx.warning(f"Received NaN {nan_count} times from historical data")
 
 if len(baseline_stats) < 2:
-    raise ActionFailed(f"No valid data received for the probe ({probeStatsKey})")
+    raise ActionFailed(f"Not enough valid data received for the probe ({probeStatsKey}). "
+                       f"Requires at least 2 data points, instead received {len(baseline_stats)} data point(s)")
 
 baseline_stats_mean = statistics.mean(baseline_stats)
 
