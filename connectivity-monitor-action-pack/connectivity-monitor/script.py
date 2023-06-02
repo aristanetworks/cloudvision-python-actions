@@ -214,4 +214,4 @@ except TimeoutExpiry:
     # If the last data point is NaN, fail the action
     if not valid_stats:
         raise ActionFailed(f"Invalid stats received for probe ({probeStatsKey}),"
-                           f" it is possible that the probe is currently down")
+                           f" it is possible that either the probe or interface is down")
