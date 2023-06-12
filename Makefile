@@ -22,4 +22,4 @@ actionpacks-mac:
 	mv *.tar gen
 
 dist: actionpacks
-	cd gen && sha256sum * > CHECKSUMS.sha256
+	cd gen && sha512sum * > CHECKSUMS.sha512
