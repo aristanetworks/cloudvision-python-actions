@@ -25,7 +25,8 @@ else:
         prefix = "TAC-" + srn
         tar_prefix = "-SR" + srn
     baseline = [
-        f"bash timeout 10 sudo tar -cvf - /mnt/flash/schedule/tech-support/* > /mnt/flash/{prefix}-hist-{dt}.tar",
+        ("bash timeout 10 sudo tar -cvf - /mnt/flash/schedule/tech-support/* "
+         f"> /mnt/flash/{prefix}-hist-{dt}.tar"),
         f"show tech-support | gzip > /mnt/flash/{prefix}-show-tech-{dt}.log.gz",
         f"show agent logs | gzip > /mnt/flash/{prefix}-show-agentlog-{dt}.log.gz",
         f"bash sudo tar -czvf - /var/log/qt/ > /mnt/flash/{prefix}-qt-logs-{dt}.tar.gz",
@@ -33,9 +34,13 @@ else:
         f"show logging system | gzip >/mnt/flash/{prefix}-show-logsys-{dt}.log.gz"
     ]
     if int(vl[1]) >= 21 and int(regex_new_version) >= 0:
-        baseline.append(f"show tech extended evpn | gzip > /mnt/flash/{prefix}-show-tech-evpn-{dt}.log.gz")
-        baseline.append(f"show arp vrf all | gzip > /mnt/flash/{prefix}-show-arp-vrf-all-{dt}.log.gz")
-    baseline.append(f"bash timeout 8 sudo tar -cvf - /mnt/flash/TAC-* > /mnt/flash/support-bundle{tar_prefix}-{dt}.tar")
+        baseline.append(
+            f"show tech extended evpn | gzip > /mnt/flash/{prefix}-show-tech-evpn-{dt}.log.gz")
+        baseline.append(
+            f"show arp vrf all | gzip > /mnt/flash/{prefix}-show-arp-vrf-all-{dt}.log.gz")
+    baseline.append(
+        ("bash timeout 8 sudo tar -cvf - /mnt/flash/TAC-* "
+         f"> /mnt/flash/support-bundle{tar_prefix}-{dt}.tar"))
 ctx.info(f"Gathering baseline logs from device {ctx.getDevice().ip}")
 ctx.runDeviceCmds(baseline, fmt="text")
 check_files = ["dir /all flash:"]

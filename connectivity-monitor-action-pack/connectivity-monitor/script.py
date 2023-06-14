@@ -55,12 +55,15 @@ if timeout < 1 or anomaly_threshold < 0 or critical_lvl < 0 or get_duration < 0:
     raise ActionFailed(("'timeout', 'anomaly_score_threshold', 'critical_level',"
                        " 'historical_get_duration' must all have positive values"))
 
-# convert historical get duration to nanoseconds as the get time range only accepts nanosecond timestamps
+# convert historical get duration to nanoseconds as the get time
+# range only accepts nanosecond timestamps
 get_duration_ns = get_duration * ONE_SECOND_NS
 
-probeStatsKey = f"Device = {device_id}, Host = {host}, VRF = {vrf}, Source interface = {source_intf}"
+probeStatsKey = (f"Device = {device_id}, Host = {host},"
+                 f" VRF = {vrf}, Source interface = {source_intf}")
 
-ctx.info(f"Monitoring the Connectivity Monitor probe ({probeStatsKey}) for anomalies in {stat} for {timeout} seconds")
+ctx.info((f"Monitoring the Connectivity Monitor probe ({probeStatsKey})"
+          f" for anomalies in {stat} for {timeout} seconds"))
 
 with ctx.getCvClient() as client:
     ccStartTs = ctx.action.getCCStartTime(client)
@@ -123,8 +126,9 @@ if nan_count > 0:
     ctx.warning(f"Received NaN {nan_count} times from historical data")
 
 if len(baseline_stats) < 2:
-    raise ActionFailed(f"Not enough valid data received for the probe ({probeStatsKey}). "
-                       f"Requires at least 2 data points, instead received {len(baseline_stats)} data point(s)")
+    raise ActionFailed((f"Not enough valid data received for the probe ({probeStatsKey}). "
+                        "Requires at least 2 data points, instead received "
+                        f"{len(baseline_stats)} data point(s)"))
 
 baseline_stats_mean = statistics.mean(baseline_stats)
 
@@ -178,7 +182,8 @@ def monitor():
         else:
             valid_stats = True
 
-        # when there is no deviation in baseline stats, any value greater than 0 is infinite deviation
+        # when there is no deviation in baseline stats,
+        # any value greater than 0 is infinite deviation
         if baseline_stats_sd == 0:
             if latest_stat == 0:
                 continue

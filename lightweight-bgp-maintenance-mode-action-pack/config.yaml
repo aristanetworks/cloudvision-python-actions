@@ -1,4 +1,4 @@
 type: PACKAGE
-version: 1.2.0
+version: 1.2.1
 name: lightweight-bgp-maintenance-mode Action package
 description: Action package containing scripts that enter and exit a device from maintenance mode

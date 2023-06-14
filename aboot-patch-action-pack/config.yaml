@@ -1,4 +1,4 @@
 type: PACKAGE
-version: 1.3.0
+version: 1.3.1
 name: aboot-patch Action package
 description: Action package containing a script that downloads and installs the specified Aboot patch for Field Notice 044.

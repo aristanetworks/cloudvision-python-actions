@@ -82,4 +82,5 @@ except TimeoutExpiry:
         ctx.warning(f"Device {deviceID} is currently streaming but a reload was not seen.\n\
             Device {deviceID} may not have reloaded properly")
     else:
-        raise ActionFailed(f"Device {deviceID} didn't respond within {monitorTimeout} seconds post-reload")
+        raise ActionFailed(
+            f"Device {deviceID} didn't respond within {monitorTimeout} seconds post-reload")

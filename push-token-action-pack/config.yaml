@@ -1,4 +1,4 @@
 type: PACKAGE
-version: 1.2.0
+version: 1.2.1
 name: push-token Action package
 description: Action package containing a script to push a token onto a file on a device
