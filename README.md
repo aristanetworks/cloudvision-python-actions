@@ -71,7 +71,7 @@ For CloudVision version 2023.1 onwards, check the [releases page](https://github
 * `tar` up the desired action pack as shown below (or run `make actionpacks` to tar all packs and put them into the `gen` folder):
 
 ``` Shell
-> tar --disable-copyfile cvf event-monitor-action-pack_1.0.0.tar event-monitor-action-pack
+> tar cvf --disable-copyfile event-monitor-action-pack_1.0.0.tar event-monitor-action-pack
 a event-monitor-action-pack
 a event-monitor-action-pack/config.yaml
 a event-monitor-action-pack/event-monitor
