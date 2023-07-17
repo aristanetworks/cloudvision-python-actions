@@ -42,6 +42,7 @@ expectedStatsDiff = ctx.action.args.get("expected_difference")
 expectedStatsDiff = int(expectedStatsDiff) if expectedStatsDiff else 0
 checkWait = ctx.action.args.get("check_wait")
 checkWait = int(checkWait) if checkWait else 60
+checkEstablished = ctx.action.args.get("check_established") == "True"
 
 with ctx.getCvClient() as client:
     ccStartTs = ctx.action.getCCStartTime(client)
@@ -55,6 +56,31 @@ with ctx.getCvClient() as client:
         err = "Missing change control device" if device is None \
             else f"device {device} is missing 'id'"
         raise ActionFailed(err)
+
+    # This block checks for the check_established flag, defaults to False
+    # If set to True, this block will check that all BGP peers are "Established"
+    # If any BGP peers are not Established, the CC will abort/fail
+    if checkEstablished:
+        bgpPeerState = ctx.runDeviceCmds(['enable', 'show ip bgp summary vrf all', 'show bgp evpn summary'])
+        errs = [resp.get('error') for resp in bgpPeerState if resp.get('error')]
+        if errs:
+            raise ActionFailed(f"Running action failed with: {errs[0]}")
+
+        for bgppeer in bgpPeerState[1]["response"]["vrfs"]["default"]["peers"]:
+            if  bgpPeerState[1]["response"]["vrfs"]["default"]["peers"][bgppeer]["peerState"] != "Established":
+                establishedState = False
+                raise ActionFailed(f"bgp peer down: {bgppeer}")
+            else:
+                establishedState = True
+              
+            if establishedState == True:
+                for evpnpeer in bgpPeerState[2]["response"]["vrfs"]["default"]["peers"]:
+                    if  bgpPeerState[2]["response"]["vrfs"]["default"]["peers"][evpnpeer]["peerState"] != "Established":
+                        establishedState = False 
+                        raise ActionFailed(f"bgp peer down: {evpnpeer}")
+                    else:
+                       establishedState = True
+
     pathElts = [
         "Devices", device.id, "versioned-data", "counts", "bgpState",
     ]
