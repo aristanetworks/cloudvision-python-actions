@@ -15,6 +15,11 @@ dynamic-params:
     required: false
     hidden: false
     default: "False"
+  - name: check_established
+    description: True/False flag to check for and abort if any BGP peer is not "Established". Defaults to False
+    required: false
+    hidden: false
+    default: "False"
   - name: expected_difference
     description: The expected difference between pre CC peers and current peers for the device. Positive numbers allow for adding peers, negative for retiring peers. Defaults to 0 (No difference allowed)
     required: false
