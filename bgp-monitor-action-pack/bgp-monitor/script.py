@@ -9,6 +9,8 @@ from google.protobuf.timestamp_pb2 import Timestamp
 from cloudvision.Connector.grpc_client import create_query
 from cloudvision.Connector.codec import Path, Wildcard
 
+CHECK_PEERS_CMDS = ['enable', 'show ip bgp summary vrf all', 'show bgp evpn summary']
+ESTABLISHED = "Established"
 
 def extractBGPStats(batch, statsDict, useVrfs=False):
     for notif in batch["notifications"]:
@@ -60,26 +62,27 @@ with ctx.getCvClient() as client:
     # This block checks for the check_established flag, defaults to False
     # If set to True, this block will check that all BGP peers are "Established"
     # If any BGP peers are not Established, the CC will abort/fail
+    failedPeers = []
     if checkEstablished:
-        bgpPeerState = ctx.runDeviceCmds(['enable', 'show ip bgp summary vrf all', 'show bgp evpn summary'])
+        bgpPeerState = ctx.runDeviceCmds(CHECK_PEERS_CMDS)
         errs = [resp.get('error') for resp in bgpPeerState if resp.get('error')]
         if errs:
-            raise ActionFailed(f"Running action failed with: {errs[0]}")
+            raise ActionFailed(f"Running action command to check that all BGP peers are established failed with: {errs[0]}")
 
-        for bgppeer in bgpPeerState[1]["response"]["vrfs"]["default"]["peers"]:
-            if  bgpPeerState[1]["response"]["vrfs"]["default"]["peers"][bgppeer]["peerState"] != "Established":
-                establishedState = False
-                raise ActionFailed(f"bgp peer down: {bgppeer}")
-            else:
-                establishedState = True
+        for vrf in bgpPeerState[1]["response"]["vrfs"]:
+          for bgppeer in bgpPeerState[1]["response"]["vrfs"][vrf]["peers"]:
+            if  bgpPeerState[1]["response"]["vrfs"][vrf]["peers"][bgppeer]["peerState"] != ESTABLISHED:
+                bgpState = bgpPeerState[1]["response"]["vrfs"][vrf]["peers"][bgppeer]["peerState"]
+                failedPeers += [{bgppeer: bgpState}]  
               
-            if establishedState == True:
-                for evpnpeer in bgpPeerState[2]["response"]["vrfs"]["default"]["peers"]:
-                    if  bgpPeerState[2]["response"]["vrfs"]["default"]["peers"][evpnpeer]["peerState"] != "Established":
-                        establishedState = False 
-                        raise ActionFailed(f"bgp peer down: {evpnpeer}")
-                    else:
-                       establishedState = True
+        for vrf in bgpPeerState[2]["response"]["vrfs"]:
+          for evpnpeer in bgpPeerState[2]["response"]["vrfs"][vrf]["peers"]:
+            if  bgpPeerState[2]["response"]["vrfs"]["default"]["peers"][evpnpeer]["peerState"] != ESTABLISHED:
+              bgpState = bgpPeerState[2]["response"]["vrfs"][vrf]["peers"][bgppeer]["peerState"]
+              failedPeers += [{bgppeer: bgpState}]  
+        
+        if len(failedPeers) > 0:
+          raise ActionFailed(f"bgp peer down: {failedPeers}")
 
     pathElts = [
         "Devices", device.id, "versioned-data", "counts", "bgpState",
