@@ -12,6 +12,7 @@ from cloudvision.Connector.codec import Path, Wildcard
 CHECK_PEERS_CMDS = ['enable', 'show ip bgp summary vrf all', 'show bgp evpn summary']
 ESTABLISHED = "Established"
 
+
 def extractBGPStats(batch, statsDict, useVrfs=False):
     for notif in batch["notifications"]:
         for stat in notif["updates"]:
@@ -67,22 +68,23 @@ with ctx.getCvClient() as client:
         bgpPeerState = ctx.runDeviceCmds(CHECK_PEERS_CMDS)
         errs = [resp.get('error') for resp in bgpPeerState if resp.get('error')]
         if errs:
-            raise ActionFailed(f"Running action command to check that all BGP peers are established failed with: {errs[0]}")
+            raise ActionFailed(
+                f"Running action command to check that all BGP peers are established failed with: {errs[0]}")
 
         for vrf in bgpPeerState[1]["response"]["vrfs"]:
-          for bgppeer in bgpPeerState[1]["response"]["vrfs"][vrf]["peers"]:
-            if  bgpPeerState[1]["response"]["vrfs"][vrf]["peers"][bgppeer]["peerState"] != ESTABLISHED:
-                bgpState = bgpPeerState[1]["response"]["vrfs"][vrf]["peers"][bgppeer]["peerState"]
-                failedPeers += [{bgppeer: bgpState}]  
-              
+            for bgppeer in bgpPeerState[1]["response"]["vrfs"][vrf]["peers"]:
+                if bgpPeerState[1]["response"]["vrfs"][vrf]["peers"][bgppeer]["peerState"] != ESTABLISHED:
+                    bgpState = bgpPeerState[1]["response"]["vrfs"][vrf]["peers"][bgppeer]["peerState"]
+                    failedPeers += [{bgppeer: bgpState}]
+
         for vrf in bgpPeerState[2]["response"]["vrfs"]:
-          for evpnpeer in bgpPeerState[2]["response"]["vrfs"][vrf]["peers"]:
-            if  bgpPeerState[2]["response"]["vrfs"]["default"]["peers"][evpnpeer]["peerState"] != ESTABLISHED:
-              bgpState = bgpPeerState[2]["response"]["vrfs"][vrf]["peers"][bgppeer]["peerState"]
-              failedPeers += [{bgppeer: bgpState}]  
-        
+            for evpnpeer in bgpPeerState[2]["response"]["vrfs"][vrf]["peers"]:
+                if bgpPeerState[2]["response"]["vrfs"]["default"]["peers"][evpnpeer]["peerState"] != ESTABLISHED:
+                    bgpState = bgpPeerState[2]["response"]["vrfs"][vrf]["peers"][bgppeer]["peerState"]
+                    failedPeers += [{bgppeer: bgpState}]
+
         if len(failedPeers) > 0:
-          raise ActionFailed(f"bgp peer down: {failedPeers}")
+            raise ActionFailed(f"bgp peer down: {failedPeers}")
 
     pathElts = [
         "Devices", device.id, "versioned-data", "counts", "bgpState",
