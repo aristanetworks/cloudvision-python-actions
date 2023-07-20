@@ -1,0 +1,4 @@
+type: PACKAGE
+version: 1.0.1
+name: save-running-config Action package
+description: Action package containing scripts that save running-config to startup-config

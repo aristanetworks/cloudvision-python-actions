@@ -47,7 +47,8 @@ if pendingPeersVrfList:
     bgpASN = None
     for vrf in pendingPeersVrfList:
         for peer in bgpSummary['vrfs'][vrf]['peers']:
-            # Check to see that the reason the the peer state is pending is not due to administrative action
+            # Check to see that the reason the the peer state is
+            # pending is not due to administrative action
             if (
                 bgpSummary['vrfs'][vrf]['peers'][peer]['peerState'] != "Established"
                 and not (
@@ -61,11 +62,12 @@ if pendingPeersVrfList:
         bgpEvpnSummary = cmdOut[1]["response"]
         # Check the peer EVPN status for the default vrf
         for peer in bgpEvpnSummary['vrfs']['default']['peers']:
+            peerSummary = bgpEvpnSummary['vrfs']['default']['peers'][peer]
             if (
-                bgpEvpnSummary['vrfs']['default']['peers'][peer]['peerState'] != "Established"
+                peerSummary['peerState'] != "Established"
                 and not (
-                    bgpEvpnSummary['vrfs']['default']['peers'][peer]['peerState'] == "Idle"
-                    and bgpEvpnSummary['vrfs']['default']['peers'][peer]['peerStateIdleReason'] == "Admin"
+                    peerSummary['peerState'] == "Idle"
+                    and peerSummary['peerStateIdleReason'] == "Admin"
                 )
             ):
                 shutdownBgpPeerList.append(('default', peer))
@@ -82,7 +84,8 @@ if pendingPeersVrfList:
             cmds.append(f"vrf {vrf}")
         cmds.append(f"neighbor {peer} shutdown")
 
-    # Record the commands used to shut down the bgp peers into the cloudvision database for reversal later
+    # Record the commands used to shut down the bgp peers into the cloudvision database
+    # for reversal later.
     # Note in the case of a failure in the list of commands this will still be written in case some
     # of the commands succeeded before encountering the failure
 

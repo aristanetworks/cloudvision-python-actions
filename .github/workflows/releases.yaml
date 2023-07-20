@@ -1,0 +1,32 @@
+---
+name: "tagged-release"
+
+on:
+  push:
+    tags:
+      - "20**.*.*"
+
+jobs:
+  tagged-release:
+    name: "Tagged Release"
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Checkout source code"
+        uses: "actions/checkout@v3"
+
+      - name: "Build artifacts"
+        run: make dist
+
+      - name: "Release"
+        uses: softprops/action-gh-release@v0.1.15
+        with:
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          body: |
+            Compatible action packages for the above CloudVision version.
+            These packages can be installed either through the packaging menu, or copied over to your CloudVision instance and installed with `/cvpi/tools/actionpack_cli <action pack>`
+          draft: true #TODO: Toggle to false once workflow is validated
+          prerelease: false
+          generate_release_notes: false
+          files: |
+            gen/*

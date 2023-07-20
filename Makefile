@@ -2,7 +2,7 @@
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the COPYING file.
 
-.PHONY: actionpacks lint
+.PHONY: actionpacks dist lint
 
 lint:
 	flake8
@@ -20,3 +20,6 @@ actionpacks-mac:
 	mkdir -p gen
 	find . -mindepth 1 -maxdepth 1 -name "*action-pack" -type d -execdir tar --disable-copyfile -cf {}.tar {} \;
 	mv *.tar gen
+
+dist: actionpacks
+	cd gen && sha512sum * > CHECKSUMS.sha512
