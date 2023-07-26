@@ -120,11 +120,15 @@ with ctx.getCvClient() as client:
     ]
 
     prevBGPStats = {}
-    # Do a point in time get to get counts from before the CC
-    for batch in client.get(query, start=ccStart, end=ccStart):
-        extractBGPStats(batch, prevBGPStats)
-    # Get the vrf counts if parameter set
-    if useVrfCounts:
+    # The basic query is the global count (the sum of all vrf counts). To avoid double-counting
+    # changes (changes in vrf A will reflect in the global counts and be counted as a change of 2),
+    # do not include these if the vrfs flag has been passed
+    if not useVrfCounts:
+        # Do a point in time get to get counts from before the CC
+        for batch in client.get(query, start=ccStart, end=ccStart):
+            extractBGPStats(batch, prevBGPStats)
+    else:
+        # Get the vrf counts if parameter set
         for batch in client.get(vrfQuery, start=ccStart, end=ccStart):
             extractBGPStats(batch, prevBGPStats, useVrfCounts)
 
@@ -134,10 +138,14 @@ with ctx.getCvClient() as client:
 
     # Get current bgp stats counts
     currBGPStats = {}
-    for batch in client.get(query):
-        extractBGPStats(batch, currBGPStats)
-    # Get the vrf counts if parameter set
-    if useVrfCounts:
+    # The basic query is the global count (the sum of all vrf counts). To avoid double-counting
+    # changes (changes in vrf A will reflect in the global counts and be counted as a change of 2),
+    # do not include these if the vrfs flag has been passed
+    if not useVrfCounts:
+        for batch in client.get(query):
+            extractBGPStats(batch, currBGPStats)
+    else:
+        # Get the vrf counts if parameter set
         for batch in client.get(vrfQuery):
             extractBGPStats(batch, currBGPStats, useVrfCounts)
 
