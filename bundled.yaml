@@ -8,4 +8,5 @@ bundled-action-packs:
     ./event-monitor-action-pack,
     ./sleep-action-pack,
     ./tac-bundle-action-pack,
+    ./connectivity-monitor-action-pack,
   ]
