@@ -6,46 +6,46 @@ description: Monitor changes in Connectivity Monitor metrics post Change Control
 file: script.py
 static-params: []
 dynamic-params:
-  - name: monitorTimeout
-    description: Maximum time duration (in seconds) to monitor device connectivity monitor statistics
+  - name: Monitor Timeout
+    description: The maximum time duration (in seconds) to monitor device connectivity statistics
     required: true
     hidden: false
     default: "300"
   - name: DeviceID
-    description: The Device serial number on which the Connectivity Monitor metrics are to be checked
+    description: The device to run the connectivity monitor action on
     required: true
     hidden: false
-  - name: host
-    description: Host of the connectivity monitor probe
+  - name: Host
+    description: The host of the connectivity monitor probe
     required: true
     hidden: false
-  - name: vrf
-    description: vrf of the connectivity monitor probe
+  - name: VRF
+    description: The virtual routing and forwarding of the connectivity monitor probe
     required: false
     hidden: false
     default: "default"
-  - name: source_intf
-    description: source interface of the connectivity monitor probe
+  - name: Source Interface
+    description: The source interface of the connectivity monitor probe
     required: false
     hidden: false
     default: "default"
-  - name: stat
-    description: The connectivity monitor statistic to monitor. Can be either 'latency', 'http_response', 'jitter', or 'packet_loss'
+  - name: Statistic
+    description: The connectivity monitor statistic to monitor. The options are 'latency', 'http_response', 'jitter', or 'packet_loss'
     required: true
     hidden: false
     default: "latency"
-  - name: critical_level
-    description: Critical level parameter used to adjust the sensitivity of change detection. Higher critical level means it is less susceptible to failure
+  - name: Critical Level
+    description: The level of change detection sensitivity. A higher critical level is less susceptible to failure
     required: true
     hidden: false
     default: "3"
-  - name: anomaly_score_threshold
-    description: Anomaly score threshold value that will cause the action to fail if, compared to historical statistics, the cusum value for the given stat deviates more than. A higher threshold value will be less susceptible to failure
+  - name: Anomaly Score Threshold
+    description: The value to compare CUSUM values against. When CUSUM values exceed this value threshold, an anomaly is detected. A higher threshold value is less susceptible to failure
     required: true
     hidden: false
     default: "100"
-  - name: historical_get_duration
-    description: Time duration (in seconds) to gather historical data for the given stat
+  - name: Historical Data Gathering Duration
+    description: The time duration (in seconds) to retrieve historical data for the chosen metric
     required: true
     hidden: false
     default: "3600"

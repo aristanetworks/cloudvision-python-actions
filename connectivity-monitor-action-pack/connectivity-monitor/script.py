@@ -24,23 +24,23 @@ ONE_SECOND_NS = 1000000000
 
 stub = ctx.getApiClient(ProbeStatsServiceStub)
 
-monitorTimeout = ctx.action.args.get("monitorTimeout")
+monitorTimeout = ctx.action.args.get("Monitor Timeout")
 timeout = int(monitorTimeout) if monitorTimeout else 300
 
-anomaly_score_threshold = ctx.action.args.get("anomaly_score_threshold")
+anomaly_score_threshold = ctx.action.args.get("Anomaly Score Threshold")
 anomaly_threshold = int(anomaly_score_threshold) if anomaly_score_threshold else 100
 
-critical_level = ctx.action.args.get("critical_level")
+critical_level = ctx.action.args.get("Critical Level")
 critical_lvl = int(critical_level) if critical_level else 3
 
-historical_get_duration = ctx.action.args.get("historical_get_duration")
+historical_get_duration = ctx.action.args.get("Historical Data Gathering Duration")
 get_duration = int(historical_get_duration) if historical_get_duration else 3600
 
 device_id = ctx.action.args.get("DeviceID")
-host = ctx.action.args.get("host")
-vrf = ctx.action.args.get("vrf")
-source_intf = ctx.action.args.get("source_intf")
-stat = ctx.action.args.get("stat")
+host = ctx.action.args.get("Host")
+vrf = ctx.action.args.get("VRF")
+source_intf = ctx.action.args.get("Source Interface")
+stat = ctx.action.args.get("Statistic")
 
 if not(device_id and host and stat):
     raise ActionFailed("Required arguments not found")
