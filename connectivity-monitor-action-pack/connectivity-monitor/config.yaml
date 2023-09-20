@@ -21,12 +21,12 @@ dynamic-params:
     hidden: false
   - name: VRF
     description: The virtual routing and forwarding of the connectivity monitor probe
-    required: false
+    required: true
     hidden: false
     default: "default"
   - name: Source Interface
     description: The source interface of the connectivity monitor probe
-    required: false
+    required: true
     hidden: false
     default: "default"
   - name: Statistic
