@@ -17,9 +17,12 @@ cmdOut = ctx.runDeviceCmds(["enable", "show boot"])
 showbootResp = cmdOut[1]["response"]
 # Show boot response is a dict. The eos boot image is under 'softwareImage'
 eosBootImageFull = showbootResp["softwareImage"]
-# The eos boot image is in the form of 'flash:/EOS.swi'. Only the image name is of interest,
-# so split on the / to get 'EOS.swi'
-eosBootImage = eosBootImageFull.split("/")[1]
+# The eos boot image is in the form of either 'flash:/EOS.swi' or 'flash:EOS.swi'.
+# Only the image name is of interest, so split on the common ':' to get 'EOS.swi' part
+# and parse further if needed
+eosBootImage: str = eosBootImageFull.split(':')[1]
+if eosBootImage.startswith('/'):
+    eosBootImage = eosBootImage[1:]
 
 # This command returns a large response message
 cmdOut = ctx.runDeviceCmds(["enable", "dir flash:EOS*"])
