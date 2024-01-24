@@ -30,8 +30,14 @@ for vrf in pendingBgpPeers['vrfs']:
 cmdOut: List[Dict] = ctx.runDeviceCmds(["enable", "show ip bgp summary vrf all"])
 errs: List[str] = [resp.get('error') for resp in cmdOut if resp.get('error')]
 if errs:
-    raise ActionFailed(f"Unable to get BGP summary, failed with: {errs[0]}")
+    raise ActionFailed(f"Unable to get IPv4 BGP summary, failed with: {errs[0]}")
 bgpSummary = cmdOut[1]["response"]
+
+cmdOut: List[Dict] = ctx.runDeviceCmds(["enable", "show ipv6 bgp summary vrf all"])
+errs: List[str] = [resp.get('error') for resp in cmdOut if resp.get('error')]
+if errs:
+    raise ActionFailed(f"Unable to get IPv6 BGP summary, failed with: {errs[0]}")
+bgpv6Summary = cmdOut[1]["response"]
 
 checkEvpn = True
 cmdOut: List[Dict] = ctx.runDeviceCmds(["enable", "show bgp evpn summary"])
@@ -46,23 +52,25 @@ shutdownBgpPeerList: List[Tuple] = []
 if pendingPeersVrfList:
     bgpASN = None
     for vrf in pendingPeersVrfList:
-        for peer in bgpSummary['vrfs'][vrf]['peers']:
+        for peer, peerSummary in tuple(bgpSummary['vrfs'][vrf]['peers'].items()) + tuple(bgpv6Summary['vrfs'][vrf]['peers'].items()):
             # Check to see that the reason the the peer state is
             # pending is not due to administrative action
             if (
-                bgpSummary['vrfs'][vrf]['peers'][peer]['peerState'] != "Established"
+                peerSummary['peerState'] != "Established"
                 and not (
-                    bgpSummary['vrfs'][vrf]['peers'][peer]['peerState'] == "Idle"
-                    and bgpSummary['vrfs'][vrf]['peers'][peer]['peerStateIdleReason'] == "Admin"
+                    peerSummary['peerState'] == "Idle"
+                    and peerSummary['peerStateIdleReason'] == "Admin"
                 )
             ):
                 shutdownBgpPeerList.append((vrf, peer))
-                bgpASN = bgpSummary['vrfs'][vrf]['asn']
+                if ":" in peer:
+                    bgpASN = bgpv6Summary['vrfs'][vrf]['asn']
+                else:
+                    bgpASN = bgpSummary['vrfs'][vrf]['asn']
     if checkEvpn:
         bgpEvpnSummary = cmdOut[1]["response"]
         # Check the peer EVPN status for the default vrf
-        for peer in bgpEvpnSummary['vrfs']['default']['peers']:
-            peerSummary = bgpEvpnSummary['vrfs']['default']['peers'][peer]
+        for peer, peerSummary in bgpEvpnSummary['vrfs']['default']['peers'].items():
             if (
                 peerSummary['peerState'] != "Established"
                 and not (
@@ -108,6 +116,6 @@ if pendingPeersVrfList:
     if errs:
         raise ActionFailed(f"Failed to shut down all peers with: {errs[0]}")
 
-    ctx.info("Inactive BGP peers successfully shutdown")
+    ctx.info(f"Inactive BGP peers successfully shutdown: {shutdownBgpPeerList}")
 else:
     ctx.info("No inactive BGP peers to shutdown")
