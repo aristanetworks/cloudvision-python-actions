@@ -2,12 +2,12 @@ type: ACTION
 action-type: CHANGECONTROL_CUSTOM
 language: PYTHON_3
 name: Ping Host Addresses on VLAN
-description: Forces a device reload, and uses the devices's CVP streaming status to verify that it succeeded to reconnect and stream to CVP
+description: Pings all host addresses on specified VLAN subnets to ensure their connectivity
 file: script.py
 static-params: []
 dynamic-params:
   - name: DeviceID
-    description: The ID of the device to reload
+    description: The ID of the device on which the VLAN(s) reside
     required: true
     hidden: false
   - name: VLAN IDs

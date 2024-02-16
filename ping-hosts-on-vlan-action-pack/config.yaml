@@ -1,4 +1,4 @@
 type: PACKAGE
-version: 1.2.0
+version: 1.2.1
 name: ping-hosts-on-vlan Action package
 description: Action package containing a script that pings all host addresses on a VLAN's subnet.
