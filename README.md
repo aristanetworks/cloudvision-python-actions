@@ -1,8 +1,8 @@
 # CloudVision Custom Python3 Actions
 
-## **Note**: This is only available from CloudVision 2021.3.0 onwards
-
-## **Note**: Check out release branches (e.g. 2022.2) or the [releases page](https://github.com/aristanetworks/cloudvision-python-actions/releases) for scripts compatible with your CloudVision version
+**Note**: Go to the [releases page](https://github.com/aristanetworks/cloudvision-python-actions/releases) or check out release branches (e.g. 2022.2) for scripts compatible with your CloudVision version.
+Actions are forwards compatible within a CloudVision release, with new releases in a maintenance train only being made if bugs are addressed. If a release does not exist for the your latest running maintenance version of CloudVision, then the latest release from that given train has the most up-to-date actions and will work on your installation, e.g. 2023.1.0 artifacts work for CloudVision version 2023.1.1, 2023.1.2, etc.
+CVaaS users are directed to install the latest release artifacts on their systems.
 
 ## Overview
 
@@ -16,9 +16,11 @@ Those action packs listed in `bundled.yaml` are **_bundled by default_** with Cl
 ## How to Upload Action Packs to a CloudVision cluster
 
 ### CloudVision 2023.1+ / CVaaS
+
 From CloudVision version 2023.1 (or on CVaaS), the Packaging UI under the general settings can be used to add or remove actionpacks downloaded from the [releases page](https://github.com/aristanetworks/cloudvision-python-actions/releases).
 
 ### CloudVision 2022.3 or before
+
 For on-premises installation versions 2022.3 or before, the following approach needs to be taken to install actionpacks.
 (This approach can alternatively be used for on-premises installations of version 2023.1 onwards instead of the Packaging UI as well)
 
