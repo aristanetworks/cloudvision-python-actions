@@ -24,8 +24,8 @@ jobs:
           token: "${{ secrets.GITHUB_TOKEN }}"
           body: |
             Compatible action packages for the above CloudVision version.
-            These packages can be installed either through the packaging menu, or copied over to your CloudVision instance and installed with `/cvpi/tools/actionpack_cli <action pack>`
-          draft: true #TODO: Toggle to false once workflow is validated
+            These packages can be installed through the packaging menu on CloudVision
+          draft: true
           prerelease: false
           generate_release_notes: false
           files: |
