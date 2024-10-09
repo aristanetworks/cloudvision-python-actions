@@ -1,0 +1,4 @@
+type: PACKAGE
+version: 1.0.0
+name: mlag-ssu-workflow Action package
+description: Action package containing scripts that set reload delay timers to 0 and revert reload delay timers to original values
