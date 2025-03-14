@@ -42,7 +42,7 @@ else:
         ("bash timeout 8 sudo tar -cvf - /mnt/flash/TAC-* "
          f"> /mnt/flash/support-bundle{tar_prefix}-{dt}.tar"))
 ctx.info(f"Gathering baseline logs from device {ctx.getDevice().ip}")
-ctx.runDeviceCmds(baseline, fmt="text")
+ctx.runDeviceCmds(baseline, fmt="text", timeout=600)
 check_files = ["dir /all flash:"]
 ctx.info(f"Listing the content of flash on device {ctx.getDevice().ip}")
 result = ctx.runDeviceCmds(check_files)
