@@ -1,0 +1,47 @@
+type: ACTION
+action-type: CHANGECONTROL_CUSTOM
+language: PYTHON_3
+name: Create certificate signing request/key
+description: This action generates a Certificate-signing request and an associated key on a device's store in flash:. The CSR can be used to request CA based Certificates for SSL Profiles.
+file: script.py
+static-params: []
+dynamic-params:
+  - name: DeviceID
+    description: The ID of the device to run this script against
+    required: true
+    hidden: false
+  - name: key_length
+    description: Key length
+    required: true
+    hidden: false
+    default: "2048"
+  - name: country
+    description: Two-Letter Country Code for use in subject
+    required: true
+    hidden: false
+    default: "US"
+  - name: email
+    description: Email address for use in subject and subject alternative name
+    required: true
+    hidden: false
+    default: ""
+  - name: locality
+    description: Locality Name for use in subject
+    required: true
+    hidden: false
+    default: ""
+  - name: organization
+    description: Organization Name for use in subject
+    required: true
+    hidden: false
+    default: ""
+  - name: organization_unit
+    description: Organization Unit Name for use in subject
+    required: true
+    hidden: false
+    default: ""
+  - name: state
+    description: State for use in subject
+    required: true
+    hidden: false
+    default: ""

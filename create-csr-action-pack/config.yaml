@@ -1,0 +1,4 @@
+type: PACKAGE
+version: 1.0.0
+name: create-CSR Action package
+description: Action package containing a script that will generate a Certificate-signing-request with an associated key on the device and stores the CSR in flash directory.
