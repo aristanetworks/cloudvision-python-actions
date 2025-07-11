@@ -34,11 +34,11 @@ It is also possible to create the artifacts by hand from the source code and upl
 * Clone the github repo into a folder using `git clone`
 * (Optional) Check out the branch/tag associated with the wanted release e.g. `git checkout 2024.2`
 * `tar` up the action pack while you are in the `actionpacks` directory (or equivalent directory). The name of the tar is not important, but it is good practice to use the same name as the as the directory you are tarring, and include the version string.
-  * Run `make actionpacks` (or `make actionpacks-mac` on an OS X system) will tar up all action packs in the repository and add them into the `gen` folder (See Makefile for further details)
+  * Run `make actionpacks` will tar up all action packs in the repository and add them into the `gen` folder (See Makefile for further details)
 
 ### Example
 
-**Note**: This example is using the `event-monitor` action pack, which is bundled by default, for a CloudVision `2024.3.*` installation, with tar being run on an OS X machine.
+**Note**: This example is using the `event-monitor` action pack, which is bundled by default, for a CloudVision `2024.3.*` installation.
 
 #### Creating the action pack tar
 
@@ -51,10 +51,10 @@ It is also possible to create the artifacts by hand from the source code and upl
 > git checkout 2024.3
 ```
 
-* `tar` up the desired action pack as shown below (or run `make actionpacks-mac` to tar all packs and put them into the `gen` folder):
+* `tar` up the desired action pack as shown below (or run `make actionpacks` to tar all packs and put them into the `gen` folder):
 
 ``` Shell
-> tar cvf --disable-copyfile event-monitor-action-pack_1.0.0.tar event-monitor-action-pack
+> tar -C cloudvision-actions cvf --disable-copyfile event-monitor-action-pack_1.0.0.tar event-monitor-action-pack
 a event-monitor-action-pack
 a event-monitor-action-pack/config.yaml
 a event-monitor-action-pack/event-monitor
