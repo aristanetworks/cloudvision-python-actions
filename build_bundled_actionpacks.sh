@@ -3,6 +3,8 @@
 set -e
 
 artifacts_dir=gen
+mkdir -p $artifacts_dir
+
 bundled_actions=`cat bundled.txt`
 
 for pkg in $bundled_actions; do

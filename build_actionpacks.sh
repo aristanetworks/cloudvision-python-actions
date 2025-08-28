@@ -3,6 +3,7 @@
 set -e
 
 artifacts_dir=gen
+mkdir -p $artifacts_dir
 
 for pkgDir in ./src/*; do
 	pkg=`basename $pkgDir`
