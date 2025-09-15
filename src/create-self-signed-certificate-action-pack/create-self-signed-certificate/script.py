@@ -19,8 +19,8 @@ from cloudvision.cvlib import ActionFailed
 device = ctx.getDevice()
 ctx.info(f"device_id: [{device.id}] - ip: [{device.ip}] - hostname: [{device.hostName}]")
 cmdResponse = ctx.runDeviceCmds(["enable", "show hostname"])
-hostname = cmdResponse[1]['response']['hostname']
-fqdn = cmdResponse[1]['response']['fqdn']
+hostname = cmdResponse[1]["response"]["hostname"]
+fqdn = cmdResponse[1]["response"]["fqdn"]
 ctx.info(f"Creating self-signed certificate for device with fqdn: {fqdn} - hostname: {hostname}")
 
 
@@ -29,18 +29,19 @@ args = ctx.action.args
 cmds = [
     "enable",
     f"security pki key generate rsa {args['key_length']} {args['key_file']}",
-
-    (f"security pki certificate generate self-signed {args['cert_file']} "
+    (
+        f"security pki certificate generate self-signed {args['cert_file']} "
         f"key {args['key_file']} "
         f"validity {args['validity']} "
         f"parameters common-name {hostname} "
-        f"country \"{args['country']}\" "
-        f"state \"{args['state']}\" "
-        f"locality \"{args['locality']}\" "
-        f"organization \"{args['organization']}\" "
-        f"organization-unit \"{args['organization_unit']}\" "
-        f"email {args['email']} "
-        f"subject-alternative-name dns {fqdn} email {args['email']} ip {device.ip}")
+        f'country "{args["country"]}" '
+        f'state "{args["state"]}" '
+        f'locality "{args["locality"]}" '
+        f'organization "{args["organization"]}" '
+        f'organization-unit "{args["organization_unit"]}" '
+        f'email "{args["email"]}" '
+        f'subject-alternative-name dns {fqdn} email "{args["email"]}" ip {device.ip}'
+    ),
 ]
 ctx.info(f"Command to run on the device: {cmds}")
 
@@ -49,7 +50,7 @@ ctx.info(f"Command to run on the device: {cmds}")
 output_cmd_list = ctx.runDeviceCmds(cmds)
 ctx.info(f"Outputs: {output_cmd_list}")
 for index, cmdOutput in enumerate(output_cmd_list):
-    if 'error' in cmdOutput.keys() and cmdOutput['error'] != '':
+    if "error" in cmdOutput.keys() and cmdOutput["error"]:
         raise ActionFailed(f"Error: switch {fqdn} - Command: '{cmds[index]}' \n Error: {cmdOutput}")
 
 
