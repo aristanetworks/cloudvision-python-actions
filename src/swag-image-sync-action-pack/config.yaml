@@ -1,0 +1,4 @@
+type: PACKAGE
+version: 1.0.0
+name: swag-image-sync Action package
+description: Action package containing a script that syncs the specified SWI and the boot-config across all the members, saves the config on the supervisor and reboots all the members other than the supervisor
