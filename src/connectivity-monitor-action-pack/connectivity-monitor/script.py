@@ -42,7 +42,7 @@ vrf = ctx.action.args.get("VRF")
 source_intf = ctx.action.args.get("Source Interface")
 stat = ctx.action.args.get("Statistic")
 
-if not(device_id and host and stat):
+if not (device_id and host and stat):
     raise ActionFailed("Required arguments not found")
 
 host = host.strip()
@@ -203,7 +203,7 @@ def monitor():
                       f" cusum_hi: {cusum_hi}, cusum_lo: {cusum_lo}")
 
             # fail the action if any of the CUSUM values exceed the threshold value
-            if(cusum_hi > anomaly_threshold or abs(cusum_lo) > anomaly_threshold):
+            if (cusum_hi > anomaly_threshold or abs(cusum_lo) > anomaly_threshold):
                 raise ActionFailed(f"Connectivity monitor probe '{probeStatsKey}' detected anomaly"
                                    f" for {stat} statistic for a prolonged period of time")
 
