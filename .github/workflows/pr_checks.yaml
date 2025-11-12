@@ -1,0 +1,25 @@
+name: Run checks on PR
+on:
+  push:
+    branches: [ "trunk" ]
+  pull_request:
+    branches: [ "trunk" ]
+
+jobs:
+  Linter:
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.12
+    steps:
+    - uses: actions/checkout@v4
+    - name: Prepare python environment
+      run: pip install flake8==7.3.0
+    - name: Run linter
+      run: flake8 .
+
+  Copyright:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Run copyright checker
+      run: ./check_copyright.sh
